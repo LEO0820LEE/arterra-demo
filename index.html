@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>ARTERRA 形狀藝術島 Demo</title>
+<style>
+  :root{
+    --c-blue:#1B4FBF;
+    --c-purple:#6B3FA0;
+    --c-gold:#C8952A;
+    --c-teal:#0F7B6C;
+    --hud-bg: rgba(0,0,0,0.52);
+    --hud-border: rgba(255,255,255,0.18);
+    --hud-border-strong: rgba(255,255,255,0.35);
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+  html,body{margin:0; padding:0; width:100%; height:100%; overflow:hidden; background:#87ceeb; font-family:"PingFang TC","Microsoft JhengHei",-apple-system,sans-serif; user-select:none;}
+  #canvas-wrap{position:fixed; inset:0;}
+  canvas{display:block; width:100%; height:100%; touch-action:none;}
+
+  .hud{position:fixed; inset:0; pointer-events:none; z-index:10;}
+  .hud *{pointer-events:auto;}
+
+  /* top season banner */
+  .season-banner{
+    position:absolute; top:8px; left:50%; transform:translateX(-50%);
+    background:var(--hud-bg); backdrop-filter:blur(8px);
+    border:0.5px solid var(--hud-border); border-radius:999px;
+    padding:4px 16px; color:#fff; font-size:12px; display:flex; gap:8px; align-items:center;
+  }
+  .season-banner .dot{width:6px; height:6px; border-radius:50%; background:var(--c-gold);}
+
+  /* top-right cluster */
+  .top-right{position:absolute; top:34px; right:8px; display:flex; flex-direction:column; align-items:flex-end; gap:6px; width:min(76vw,300px);}
+  .panel-row{
+    background:var(--hud-bg); backdrop-filter:blur(8px);
+    border:0.5px solid var(--hud-border); border-radius:12px;
+    padding:6px 10px; width:100%; display:flex; align-items:center; justify-content:space-between; gap:8px; color:#fff;
+  }
+  .currency{display:flex; gap:10px; font-size:11px;}
+  .currency span{display:flex; align-items:center; gap:3px;}
+  .cur-dot{width:9px; height:9px; border-radius:50%; display:inline-block;}
+  .cur-inspire{background:var(--c-gold);}
+  .cur-gem{background:var(--c-purple);}
+  .cur-stamp{background:var(--c-teal);}
+
+  .profile-row{font-size:11px; display:flex; align-items:center; gap:6px; width:100%;}
+  .lvbadge{background:var(--c-blue); border-radius:6px; padding:1px 6px; font-size:10px; font-weight:500;}
+  .xpbar{flex:1; height:5px; background:rgba(255,255,255,0.2); border-radius:3px; overflow:hidden;}
+  .xpbar i{display:block; height:100%; width:38%; background:var(--c-gold);}
+
+  .main-fn-row{display:flex; gap:6px; width:100%;}
+  .fn-btn{
+    flex:1; background:var(--hud-bg); backdrop-filter:blur(8px);
+    border:0.5px solid var(--hud-border); border-radius:10px;
+    padding:8px 4px; color:#fff; font-size:11px; text-align:center; position:relative;
+  }
+  .fn-btn.gold{border-color:rgba(200,149,42,0.6);}
+  .fn-btn .dot-alert{position:absolute; top:-3px; right:-3px; width:8px; height:8px; border-radius:50%; background:#e05252;}
+  .fn-btn i{display:block; font-size:16px; margin-bottom:2px;}
+
+  .minor-fn-row{display:flex; flex-wrap:wrap; gap:6px; justify-content:flex-end; width:100%;}
+  .minor-btn{
+    width:38px; height:38px; border-radius:50%;
+    background:var(--hud-bg); backdrop-filter:blur(8px);
+    border:0.5px solid var(--hud-border); color:#fff;
+    display:flex; align-items:center; justify-content:center; font-size:15px;
+  }
+
+  /* left toolbar */
+  .left-toolbar{position:absolute; left:8px; top:50%; transform:translateY(-50%); display:flex; flex-direction:column; gap:8px;}
+  .left-toolbar button{
+    width:36px; height:36px; border-radius:50%;
+    background:var(--hud-bg); backdrop-filter:blur(8px);
+    border:0.5px solid var(--hud-border); color:#fff; font-size:15px;
+  }
+
+  /* chat */
+  .chat-box{position:absolute; left:8px; bottom:96px; width:min(58vw,230px);}
+  .chat-tabs{display:flex; gap:4px; margin-bottom:4px;}
+  .chat-tabs span{font-size:10px; color:#fff; background:rgba(0,0,0,0.35); border-radius:6px; padding:2px 6px;}
+  .chat-tabs span.active{background:var(--c-blue);}
+  .chat-log{
+    background:var(--hud-bg); backdrop-filter:blur(8px); border:0.5px solid var(--hud-border);
+    border-radius:10px; padding:6px 8px; color:#fff; font-size:11px; line-height:1.6; max-height:60px; overflow:hidden;
+  }
+
+  /* joystick */
+  .joy-wrap{
+    position:absolute; left:26px; bottom:26px; width:110px; height:110px;
+  }
+  .joy-base{
+    position:absolute; inset:0; border-radius:50%;
+    background:rgba(255,255,255,0.10); backdrop-filter:blur(6px);
+    border:1.5px solid rgba(255,255,255,0.35);
+  }
+  .joy-stick{
+    position:absolute; width:46px; height:46px; border-radius:50%;
+    left:50%; top:50%; margin-left:-23px; margin-top:-23px;
+    background:rgba(255,255,255,0.6); border:1px solid rgba(255,255,255,0.8);
+    transition:transform .05s linear;
+  }
+  .joy-wrap.active .joy-base{border-color:rgba(200,149,42,0.75);}
+  .joy-wrap.active .joy-stick{background:rgba(200,149,42,0.75); border-color:rgba(200,149,42,0.9);}
+
+  /* interact prompt */
+  .interact-prompt{
+    position:absolute; bottom:150px; left:50%; transform:translateX(-50%);
+    background:var(--hud-bg); backdrop-filter:blur(8px); border:0.5px solid var(--hud-border-strong);
+    border-radius:999px; padding:10px 20px; color:#fff; font-size:13px; display:none;
+  }
+  .interact-prompt.show{display:block;}
+
+  /* bottom right shortcuts */
+  .shortcuts{position:absolute; right:10px; bottom:20px; display:flex; flex-direction:column; align-items:flex-end; gap:6px;}
+  .shortcuts .sbtn{
+    width:52px; height:52px; border-radius:50%; background:var(--hud-bg); backdrop-filter:blur(8px);
+    border:0.5px solid var(--hud-border); color:#fff; font-size:20px; display:flex; align-items:center; justify-content:center;
+  }
+
+  /* zone label */
+  .zone-label{
+    position:absolute; top:44%; left:50%; transform:translate(-50%,-50%);
+    color:#fff; font-size:15px; font-weight:500; text-shadow:0 1px 6px rgba(0,0,0,0.6);
+    background:rgba(0,0,0,0.28); padding:4px 14px; border-radius:999px; opacity:0; transition:opacity .3s;
+  }
+  .zone-label.show{opacity:1;}
+
+  /* generic overlay panel */
+  .overlay{
+    position:absolute; inset:0; background:rgba(0,0,0,0.45); display:none; align-items:center; justify-content:center; z-index:30;
+  }
+  .overlay.show{display:flex;}
+  .sheet{
+    width:min(92vw,380px); max-height:78vh; overflow:auto;
+    background:rgba(20,22,30,0.86); backdrop-filter:blur(10px);
+    border:0.5px solid var(--hud-border-strong); border-radius:16px; padding:14px; color:#fff;
+  }
+  .sheet-head{display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;}
+  .sheet-head h3{margin:0; font-size:16px; font-weight:500;}
+  .sheet-close{width:26px; height:26px; border-radius:50%; background:rgba(255,255,255,0.12); border:none; color:#fff; font-size:14px;}
+
+  .grid8{display:grid; grid-template-columns:repeat(4,1fr); gap:8px;}
+  .slot{aspect-ratio:1; border-radius:10px; background:rgba(255,255,255,0.08); border:1px solid var(--hud-border);}
+
+  .shop-tabs{display:flex; gap:6px; margin-bottom:10px;}
+  .shop-tabs span{font-size:11px; padding:5px 10px; border-radius:999px; background:rgba(255,255,255,0.1);}
+  .shop-tabs span.on{background:var(--c-blue);}
+  .shop-card{background:rgba(255,255,255,0.07); border-radius:10px; padding:10px; margin-bottom:8px; display:flex; gap:10px; align-items:center;}
+  .shop-thumb{width:44px; height:44px; border-radius:8px; flex-shrink:0;}
+  .shop-info{flex:1; font-size:12px;}
+  .shop-price{font-size:11px; color:var(--c-gold);}
+
+  .pass-track{display:flex; gap:4px; overflow-x:auto; padding-bottom:6px;}
+  .pass-lv{width:34px; height:34px; border-radius:8px; flex-shrink:0; display:flex; align-items:center; justify-content:center; font-size:10px;}
+  .pass-lv.on{background:var(--c-gold); color:#3a2a05;}
+  .pass-lv.off{background:rgba(255,255,255,0.1); color:rgba(255,255,255,0.5);}
+
+  .friend-row{display:flex; align-items:center; gap:10px; padding:8px 0; border-bottom:1px solid rgba(255,255,255,0.08); font-size:12px;}
+  .friend-dot{width:8px; height:8px; border-radius:50%;}
+  .empty-hint{font-size:12px; color:rgba(255,255,255,0.55); text-align:center; padding:20px 0;}
+
+  /* dialogue */
+  .dialogue{position:absolute; left:0; right:0; bottom:0; padding:16px; display:none; z-index:25;}
+  .dialogue.show{display:block;}
+  .dialogue-box{
+    background:var(--hud-bg); backdrop-filter:blur(8px); border:0.5px solid var(--hud-border-strong);
+    border-radius:14px; padding:14px; color:#fff; max-width:520px; margin:0 auto;
+  }
+  .dialogue-name{color:var(--c-gold); font-size:13px; font-weight:500; margin-bottom:4px;}
+  .dialogue-text{font-size:13px; line-height:1.7;}
+  .dialogue-next{margin-top:10px; text-align:right; font-size:12px; color:rgba(255,255,255,0.6);}
+
+  /* artwork card */
+  .art-card{
+    position:absolute; left:50%; bottom:0; transform:translateX(-50%);
+    width:min(92vw,380px); background:rgba(20,22,30,0.88); backdrop-filter:blur(10px);
+    border:0.5px solid var(--hud-border-strong); border-radius:16px 16px 0 0; padding:16px; color:#fff;
+    display:none; z-index:25;
+  }
+  .art-card.show{display:block;}
+  .art-title{font-size:15px; font-weight:500; color:var(--c-gold); margin-bottom:6px;}
+  .art-desc{font-size:12px; line-height:1.7; color:rgba(255,255,255,0.85);}
+  .art-close{position:absolute; top:10px; right:10px; width:26px; height:26px; border-radius:50%; background:rgba(255,255,255,0.12); border:none; color:#fff;}
+
+  .loading{position:fixed; inset:0; background:#0d1220; color:#fff; display:flex; align-items:center; justify-content:center; font-size:13px; z-index:99;}
+</style>
+</head>
+<body>
+
+<div id="loading" class="loading">正在建構 ARTERRA 島嶼…</div>
+
+<div id="canvas-wrap"></div>
+
+<div class="hud">
+  <div class="season-banner"><span class="dot"></span>第一季 · 色彩的呼吸 · Day 12</div>
+
+  <div class="top-right">
+    <div class="panel-row currency">
+      <span><i class="cur-dot cur-inspire"></i>2,480</span>
+      <span><i class="cur-dot cur-gem"></i>60</span>
+      <span><i class="cur-dot cur-stamp"></i>132</span>
+    </div>
+    <div class="panel-row profile-row">
+      <span class="lvbadge">Lv 6</span>
+      <span>訪客 · 藝術島民</span>
+      <div class="xpbar"><i></i></div>
+    </div>
+    <div class="main-fn-row">
+      <button class="fn-btn gold" data-panel="pass">通行證<div class="dot-alert"></div></button>
+      <button class="fn-btn gold" data-panel="shop">商城</button>
+      <button class="fn-btn" data-panel="event">限時活動</button>
+    </div>
+    <div class="minor-fn-row">
+      <button class="minor-btn" data-panel="friend" title="好友">友</button>
+      <button class="minor-btn" data-panel="home" title="家園">家</button>
+      <button class="minor-btn" data-panel="fashion" title="時裝">裝</button>
+      <button class="minor-btn" data-panel="collection" title="收藏">藏</button>
+      <button class="minor-btn" data-panel="achieve" title="成就">成</button>
+      <button class="minor-btn" data-panel="bag" title="背包">包</button>
+      <button class="minor-btn" data-panel="rank" title="排行">榜</button>
+    </div>
+  </div>
+
+  <div class="left-toolbar">
+    <button title="地圖">圖</button>
+    <button title="截圖">拍</button>
+    <button title="表情">笑</button>
+    <button title="設定">設</button>
+  </div>
+
+  <div class="chat-box">
+    <div class="chat-tabs"><span class="active">全體</span><span>附近</span><span>好友</span><span>公會</span></div>
+    <div class="chat-log">
+      系統：歡迎來到 ARTERRA 形狀藝術島。<br>
+      艾拉：試著靠近我聊聊島的故事吧！
+    </div>
+  </div>
+
+  <div class="zone-label" id="zoneLabel"></div>
+  <div class="interact-prompt" id="interactPrompt">輕點螢幕與艾拉互動</div>
+
+  <div class="joy-wrap" id="joyWrap">
+    <div class="joy-base"></div>
+    <div class="joy-stick" id="joyStick"></div>
+  </div>
+
+  <div class="shortcuts">
+    <div class="sbtn" id="jumpBtn" title="跳躍">↑</div>
+  </div>
+
+  <!-- panels -->
+  <div class="overlay" id="overlay">
+    <div class="sheet" id="sheetContent"></div>
+  </div>
+
+  <!-- NPC dialogue -->
+  <div class="dialogue" id="dialogue">
+    <div class="dialogue-box">
+      <div class="dialogue-name">艾拉 · 港口引導員</div>
+      <div class="dialogue-text" id="dialogueText"></div>
+      <div class="dialogue-next" id="dialogueNext">輕點繼續 ›</div>
+    </div>
+  </div>
+
+  <!-- artwork card -->
+  <div class="art-card" id="artCard">
+    <button class="art-close" id="artClose">✕</button>
+    <div class="art-title" id="artTitle"></div>
+    <div class="art-desc" id="artDesc"></div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(function(){
+"use strict";
+
+var scene, camera, renderer, clock;
+var islandGroup, galleryGroup;
+var player, playerVel = new THREE.Vector3();
+var moveDir = new THREE.Vector2(0,0);
+var jumping=false, jumpT=0;
+var npc, npcHead;
+var museumDoorPos = new THREE.Vector3(0, 0, -22);
+var npcPos = new THREE.Vector3(4, 0, -18);
+var inGallery = false;
+var nearNPC = false, nearMuseum = false, nearExit=false, nearArt=-1;
+var dialogueLines = [
+  "歡迎來到 ARTERRA，我是艾拉，島上的引導員。",
+  "西元 2087 年，一群藝術家與科技創業者在太平洋上建起了這座人工浮島。",
+  "『SAI』在古老語言中意為『色彩的呼吸』——這座島的誕生，是為了讓藝術從螢幕走向真實的空間。",
+  "『形狀是最初的語言，藝術是最後的家。』這句話刻在中央廣場的石碑上，是我們最重要的信念。",
+  "北邊的主美術館裡，收藏著現代、古典與數位三種主題的展品，去看看吧！"
+];
+var dialogueIdx = 0;
+
+var artworks = [
+  {title:"靜默之海", desc:"現代藝術館館藏。以層疊的藍與灰描繪深海的寧靜，據說是最受訪客收藏的作品之一。", color:0x1B4FBF},
+  {title:"色彩的呼吸", desc:"以島名為題的紀念創作，暖橙與金色線條交織，象徵 ARTERRA 誕生的那一刻。", color:0xC8952A},
+  {title:"形狀之語", desc:"古典藝術廊風格的幾何構成，探討『形狀是最初的語言』這一島嶼信念。", color:0x6B3FA0},
+  {title:"潮間帶", desc:"數位藝術館的生成藝術作品，青綠色調呼應生活休閒區的海岸線。", color:0x0F7B6C},
+  {title:"無題 · 訪客之心", desc:"由聯合創作活動誕生的作品，收錄全島玩家共同繪製的畫布片段。", color:0xE07A5F}
+];
+
+function init(){
+  scene = new THREE.Scene();
+  scene.background = new THREE.Color(0x8fd0e8);
+  scene.fog = new THREE.Fog(0x8fd0e8, 40, 110);
+
+  camera = new THREE.PerspectiveCamera(58, window.innerWidth/window.innerHeight, 0.1, 300);
+
+  renderer = new THREE.WebGLRenderer({antialias:true});
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
+  document.getElementById('canvas-wrap').appendChild(renderer.domElement);
+
+  clock = new THREE.Clock();
+
+  var hemi = new THREE.HemisphereLight(0xffffff, 0x557755, 0.9);
+  scene.add(hemi);
+  var sun = new THREE.DirectionalLight(0xfff2d6, 0.9);
+  sun.position.set(30,40,10);
+  scene.add(sun);
+
+  islandGroup = new THREE.Group();
+  galleryGroup = new THREE.Group();
+  galleryGroup.visible = false;
+  scene.add(islandGroup);
+  scene.add(galleryGroup);
+
+  buildIsland();
+  buildGallery();
+  buildPlayer();
+
+  window.addEventListener('resize', onResize);
+  setupJoystick();
+  setupUI();
+
+  document.getElementById('loading').style.display='none';
+}
+
+function onResize(){
+  camera.aspect = window.innerWidth/window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+}
+
+/* ---------- geometry helpers ---------- */
+function disk(radius, color, y, segments){
+  var geo = new THREE.CircleGeometry(radius, segments||36);
+  var mat = new THREE.MeshLambertMaterial({color:color});
+  var m = new THREE.Mesh(geo, mat);
+  m.rotation.x = -Math.PI/2;
+  m.position.y = y;
+  return m;
+}
+
+function box(w,h,d,color){
+  var geo = new THREE.BoxGeometry(w,h,d);
+  var mat = new THREE.MeshLambertMaterial({color:color});
+  return new THREE.Mesh(geo, mat);
+}
+
+/* ---------- island ---------- */
+function buildIsland(){
+  var base = disk(46, 0x3a8f5c, -0.5, 48);
+  islandGroup.add(base);
+
+  var agora = disk(9, 0xEDEAE0, 0.01, 32);
+  agora.position.set(0,0,0);
+  islandGroup.add(agora);
+
+  var dock = disk(10, 0x8a6a4a, 0.01, 24);
+  dock.position.set(0,0,26);
+  islandGroup.add(dock);
+
+  var gallery = disk(13, 0xF4F1EA, 0.01, 32);
+  gallery.position.set(0,0,-22);
+  islandGroup.add(gallery);
+
+  var alley = disk(10, 0xB5654A, 0.01, 24);
+  alley.position.set(-24,0,0);
+  islandGroup.add(alley);
+
+  var cove = disk(10, 0xE0C888, 0.01, 24);
+  cove.position.set(24,0,4);
+  islandGroup.add(cove);
+
+  // water
+  var water = disk(140, 0x2a7fb0, -1.2, 64);
+  scene.add(water);
+
+  // museum exterior
+  var museum = box(18, 9, 12, 0xFFFFFF);
+  museum.position.set(0, 4.5, -26);
+  islandGroup.add(museum);
+  var roof = box(20, 0.6, 14, 0xE8E4D8);
+  roof.position.set(0, 9.2, -26);
+  islandGroup.add(roof);
+  for (var i=-2;i<=2;i++){
+    var col = box(0.8, 6, 0.8, 0xE8E4D8);
+    col.position.set(i*3.4, 3, -20.3);
+    islandGroup.add(col);
+  }
+  var doorGlow = disk(2.4, 0xC8952A, 0.02, 24);
+  doorGlow.position.copy(museumDoorPos);
+  islandGroup.add(doorGlow);
+
+  // rest area (leisure cove) - dock + benches, decorative only
+  var pier = box(3, 0.4, 10, 0x9a7550);
+  pier.position.set(24, 0.3, 8);
+  islandGroup.add(pier);
+  var lantern = new THREE.Mesh(new THREE.SphereGeometry(0.5,12,12), new THREE.MeshLambertMaterial({color:0xE0C888}));
+  lantern.position.set(22, 1.6, 4);
+  islandGroup.add(lantern);
+  var bench = box(2.4,0.5,0.8,0x8a6a4a);
+  bench.position.set(26,0.4,2);
+  islandGroup.add(bench);
+
+  // mini-game pavilion (leisure cove) - exterior only
+  var pavilion = box(6,3,6,0xF0DDBB);
+  pavilion.position.set(20,1.7,-2);
+  islandGroup.add(pavilion);
+  var pavRoof = box(7,0.4,7,0xB5654A);
+  pavRoof.position.set(20,3.4,-2);
+  islandGroup.add(pavRoof);
+
+  // artist alley decorative walls
+  var alleyWall = box(10,4,1, 0x9c5a44);
+  alleyWall.position.set(-24,2,-4);
+  islandGroup.add(alleyWall);
+
+  // agora fountain
+  var fountain = new THREE.Mesh(new THREE.CylinderGeometry(1.6,1.8,1,20), new THREE.MeshLambertMaterial({color:0xffffff}));
+  fountain.position.set(0,0.5,0);
+  islandGroup.add(fountain);
+
+  // trees decoration
+  for (var t=0;t<10;t++){
+    var ang = Math.random()*Math.PI*2;
+    var r = 30+Math.random()*10;
+    addTree(Math.cos(ang)*r, Math.sin(ang)*r*0.6 - 6);
+  }
+}
+
+function addTree(x,z){
+  var trunk = new THREE.Mesh(new THREE.CylinderGeometry(0.25,0.3,2,8), new THREE.MeshLambertMaterial({color:0x7a5a3a}));
+  trunk.position.set(x,1,z);
+  var leaves = new THREE.Mesh(new THREE.SphereGeometry(1.3,10,10), new THREE.MeshLambertMaterial({color:0x4a9a5a}));
+  leaves.position.set(x,2.4,z);
+  islandGroup.add(trunk);
+  islandGroup.add(leaves);
+}
+
+/* ---------- gallery interior ---------- */
+var artMeshes = [];
+var artFloorPositions = []; // {x,z,title} - used for proximity interaction like NPC
+function buildGallery(){
+  var floor = box(30,0.4,20,0xF4F1EA);
+  floor.position.set(0,-0.2,0);
+  galleryGroup.add(floor);
+  var ceil = box(30,0.4,20,0xEDEAE0);
+  ceil.position.set(0,7,0);
+  galleryGroup.add(ceil);
+
+  var backWall = box(30,7,0.4,0xffffff);
+  backWall.position.set(0,3.5,-10);
+  galleryGroup.add(backWall);
+  var leftWall = box(0.4,7,20,0xffffff);
+  leftWall.position.set(-15,3.5,0);
+  galleryGroup.add(leftWall);
+  var rightWall = box(0.4,7,20,0xffffff);
+  rightWall.position.set(15,3.5,0);
+  galleryGroup.add(rightWall);
+
+  var exitGlow = disk(2, 0xC8952A, 0.02, 24);
+  exitGlow.position.set(0,0,9);
+  galleryGroup.add(exitGlow);
+
+  var positions = [
+    [-10, 3.2, -9.7], [-5, 3.2, -9.7], [0, 3.2, -9.7], [5, 3.2, -9.7], [10, 3.2, -9.7]
+  ];
+  for (var i=0;i<artworks.length;i++){
+    var a = artworks[i];
+    var frame = box(3.2,3.6,0.15, 0x3a3a3a);
+    frame.position.set(positions[i][0], positions[i][1], positions[i][2]);
+    galleryGroup.add(frame);
+    var canvasMesh = box(2.8,3.2,0.05, a.color);
+    canvasMesh.position.set(positions[i][0], positions[i][1], positions[i][2]+0.12);
+    canvasMesh.userData.artIndex = i;
+    galleryGroup.add(canvasMesh);
+    artMeshes.push(canvasMesh);
+    artFloorPositions.push({x:positions[i][0], z:positions[i][2]+2.6, index:i});
+  }
+}
+
+/* ---------- player ---------- */
+function makeCritter(bodyColor, earColor){
+  var g = new THREE.Group();
+  var body = new THREE.Mesh(new THREE.SphereGeometry(0.9,16,16), new THREE.MeshLambertMaterial({color:bodyColor}));
+  body.scale.set(1,0.85,1.1);
+  body.position.y = 0.9;
+  g.add(body);
+  var head = new THREE.Mesh(new THREE.SphereGeometry(0.62,16,16), new THREE.MeshLambertMaterial({color:bodyColor}));
+  head.position.set(0,1.7,0.35);
+  g.add(head);
+  var earGeo = new THREE.ConeGeometry(0.22,0.5,8);
+  var earMat = new THREE.MeshLambertMaterial({color:earColor});
+  var earL = new THREE.Mesh(earGeo, earMat); earL.position.set(-0.32,2.25,0.35); g.add(earL);
+  var earR = new THREE.Mesh(earGeo, earMat); earR.position.set(0.32,2.25,0.35); g.add(earR);
+  var eyeGeo = new THREE.SphereGeometry(0.07,8,8);
+  var eyeMat = new THREE.MeshBasicMaterial({color:0x1a1a1a});
+  var eyeL = new THREE.Mesh(eyeGeo,eyeMat); eyeL.position.set(-0.2,1.75,0.9); g.add(eyeL);
+  var eyeR = new THREE.Mesh(eyeGeo,eyeMat); eyeR.position.set(0.2,1.75,0.9); g.add(eyeR);
+  var noseGeo = new THREE.SphereGeometry(0.1,8,8);
+  var nose = new THREE.Mesh(noseGeo, new THREE.MeshLambertMaterial({color:earColor}));
+  nose.position.set(0,1.6,0.95); g.add(nose);
+  g.userData.head = head;
+  g.userData.legs = [];
+  var legMat = new THREE.MeshLambertMaterial({color:bodyColor});
+  for (var i=0;i<4;i++){
+    var leg = new THREE.Mesh(new THREE.SphereGeometry(0.22,8,8), legMat);
+    var lx = (i%2===0? -0.4:0.4);
+    var lz = (i<2? -0.35:0.45);
+    leg.position.set(lx, 0.28, lz);
+    g.add(leg);
+    g.userData.legs.push(leg);
+  }
+  return g;
+}
+
+function buildPlayer(){
+  player = makeCritter(0xF2B04C, 0x8a4a1a);
+  player.position.set(0, 0, 18);
+  islandGroup.add(player);
+
+  npc = makeCritter(0x7BA7D9, 0x2a4a6a);
+  npc.position.copy(npcPos);
+  npc.rotation.y = Math.PI;
+  islandGroup.add(npc);
+}
+
+/* ---------- fixed disc joystick: drag direction = move direction ---------- */
+var joyVec = new THREE.Vector2();
+var joyActive = false;
+var joyCenter = {x:0, y:0};
+var joyMaxRadius = 40;
+
+function setupJoystick(){
+  var wrap = document.getElementById('joyWrap');
+  var stick = document.getElementById('joyStick');
+
+  function getCenter(){
+    var r = wrap.getBoundingClientRect();
+    joyCenter.x = r.left + r.width/2;
+    joyCenter.y = r.top + r.height/2;
+  }
+
+  function updateFromPoint(x,y){
+    var dx = x - joyCenter.x;
+    var dy = y - joyCenter.y;
+    var len = Math.sqrt(dx*dx+dy*dy);
+    if(len > joyMaxRadius){
+      dx = dx/len*joyMaxRadius;
+      dy = dy/len*joyMaxRadius;
+    }
+    stick.style.transform = 'translate('+dx+'px,'+dy+'px)';
+    joyVec.set(dx/joyMaxRadius, dy/joyMaxRadius);
+  }
+
+  function start(x,y){
+    getCenter();
+    joyActive = true;
+    wrap.classList.add('active');
+    updateFromPoint(x,y);
+  }
+  function move(x,y){
+    if(!joyActive) return;
+    updateFromPoint(x,y);
+  }
+  function end(){
+    joyActive = false;
+    wrap.classList.remove('active');
+    stick.style.transform = 'translate(0px,0px)';
+    joyVec.set(0,0);
+  }
+
+  wrap.addEventListener('touchstart', function(e){ var t=e.changedTouches[0]; start(t.clientX,t.clientY); e.preventDefault(); }, {passive:false});
+  window.addEventListener('touchmove', function(e){ if(!joyActive) return; var t=e.changedTouches[0]; move(t.clientX,t.clientY); e.preventDefault(); }, {passive:false});
+  window.addEventListener('touchend', function(){ if(joyActive) end(); });
+  window.addEventListener('touchcancel', function(){ if(joyActive) end(); });
+
+  wrap.addEventListener('mousedown', function(e){ start(e.clientX,e.clientY); });
+  window.addEventListener('mousemove', function(e){ if(joyActive) move(e.clientX,e.clientY); });
+  window.addEventListener('mouseup', function(){ if(joyActive) end(); });
+
+  document.getElementById('jumpBtn').addEventListener('click', function(){
+    if(!jumping){ jumping=true; jumpT=0; }
+  });
+  document.getElementById('jumpBtn').addEventListener('touchstart', function(e){
+    e.preventDefault();
+    if(!jumping){ jumping=true; jumpT=0; }
+  }, {passive:false});
+}
+
+/* ---------- UI panels ---------- */
+var panelData = {
+  pass: {title:"通行證 · 第一季 色彩的呼吸", body: passHTML()},
+  shop: {title:"商城", body: shopHTML()},
+  event: {title:"限時活動", body: emptyHTML("目前沒有進行中的限時活動")},
+  friend:{title:"好友", body: emptyHTML("尚未新增好友，靠近其他玩家可以打招呼交朋友")},
+  home: {title:"家園", body: emptyHTML("你的個人展間尚未裝飾")},
+  fashion:{title:"時裝", body: gridHTML()},
+  collection:{title:"收藏夾", body: gridHTML()},
+  achieve:{title:"成就", body: emptyHTML("完成任務可以解鎖成就徽章")},
+  bag: {title:"背包", body: gridHTML()},
+  rank: {title:"排行榜", body: emptyHTML("本週排行榜將於週一更新")}
+};
+
+function passHTML(){
+  var html = '<div class="pass-track">';
+  for (var i=1;i<=20;i++){
+    html += '<div class="pass-lv '+(i<=8?'on':'off')+'">'+i+'</div>';
+  }
+  html += '</div><div class="empty-hint">Lv 8 / 100 · 賽季剩餘 21 天</div>';
+  return html;
+}
+function shopHTML(){
+  var tabs = ['精選','時裝','道具','套組'];
+  var html = '<div class="shop-tabs">';
+  tabs.forEach(function(t,i){ html += '<span class="'+(i===0?'on':'')+'">'+t+'</span>'; });
+  html += '</div>';
+  var colors=['#1B4FBF','#6B3FA0','#C8952A','#0F7B6C'];
+  for (var i=0;i<4;i++){
+    html += '<div class="shop-card"><div class="shop-thumb" style="background:'+colors[i]+'"></div><div class="shop-info">限定展示道具 #0'+(i+1)+'<div class="shop-price">藝術晶石 x '+(20+i*15)+'</div></div></div>';
+  }
+  return html;
+}
+function emptyHTML(msg){
+  return '<div class="empty-hint">'+msg+'</div>';
+}
+function gridHTML(){
+  var html='<div class="grid8">';
+  for(var i=0;i<12;i++) html+='<div class="slot"></div>';
+  html+='</div>';
+  return html;
+}
+
+function setupUI(){
+  document.querySelectorAll('[data-panel]').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      openPanel(this.getAttribute('data-panel'));
+    });
+  });
+  document.getElementById('overlay').addEventListener('click', function(e){
+    if(e.target===this) closePanel();
+  });
+
+  document.getElementById('interactPrompt').addEventListener('click', function(){
+    if(nearNPC && !inGallery){ startDialogue(); }
+    else if(nearMuseum && !inGallery){ enterGallery(); }
+    else if(nearArt>=0 && inGallery){ showArt(nearArt); }
+    else if(nearExit && inGallery){ exitGallery(); }
+  });
+
+  document.getElementById('dialogue').addEventListener('click', function(){
+    dialogueIdx++;
+    if(dialogueIdx>=dialogueLines.length){ endDialogue(); }
+    else { document.getElementById('dialogueText').textContent = dialogueLines[dialogueIdx]; }
+  });
+
+  document.getElementById('artClose').addEventListener('click', function(e){
+    e.stopPropagation();
+    document.getElementById('artCard').classList.remove('show');
+  });
+}
+
+function openPanel(key){
+  var d = panelData[key];
+  if(!d) return;
+  document.getElementById('sheetContent').innerHTML =
+    '<div class="sheet-head"><h3>'+d.title+'</h3><button class="sheet-close" id="sheetCloseBtn">✕</button></div>' + d.body;
+  document.getElementById('overlay').classList.add('show');
+  document.getElementById('sheetCloseBtn').addEventListener('click', closePanel);
+}
+function closePanel(){
+  document.getElementById('overlay').classList.remove('show');
+}
+
+function startDialogue(){
+  dialogueIdx = 0;
+  document.getElementById('dialogueText').textContent = dialogueLines[0];
+  document.getElementById('dialogue').classList.add('show');
+  document.getElementById('interactPrompt').classList.remove('show');
+}
+function endDialogue(){
+  document.getElementById('dialogue').classList.remove('show');
+}
+
+function enterGallery(){
+  inGallery = true;
+  islandGroup.visible = false;
+  galleryGroup.visible = true;
+  player.position.set(0,0,6);
+  document.getElementById('interactPrompt').classList.remove('show');
+}
+function exitGallery(){
+  inGallery = false;
+  islandGroup.visible = true;
+  galleryGroup.visible = false;
+  player.position.set(0,0,20);
+  document.getElementById('interactPrompt').classList.remove('show');
+}
+
+function showArt(idx){
+  var a = artworks[idx];
+  document.getElementById('artTitle').textContent = a.title;
+  document.getElementById('artDesc').textContent = a.desc;
+  document.getElementById('artCard').classList.add('show');
+}
+
+/* artwork interaction now uses proximity + interactPrompt, same pattern as NPC (see animate() and interactPrompt click handler) */
+
+/* ---------- zone label ---------- */
+var zones = [
+  {name:"中央廣場 Agora", x:0,z:0, r:9},
+  {name:"港口區 Dockyard", x:0,z:26, r:10},
+  {name:"主美術館區 Grand Gallery", x:0,z:-22, r:13},
+  {name:"個人美術館區 Artist Alley", x:-24,z:0, r:10},
+  {name:"生活休閒區 Leisure Cove", x:24,z:4, r:10}
+];
+var lastZone = "";
+function updateZoneLabel(){
+  if(inGallery) { document.getElementById('zoneLabel').classList.remove('show'); return; }
+  var p = player.position;
+  var current = null;
+  for (var i=0;i<zones.length;i++){
+    var z = zones[i];
+    var dx=p.x-z.x, dz=p.z-z.z;
+    if(Math.sqrt(dx*dx+dz*dz) < z.r){ current = z.name; break; }
+  }
+  var label = document.getElementById('zoneLabel');
+  if(current && current!==lastZone){
+    label.textContent = current;
+    label.classList.add('show');
+    lastZone = current;
+    clearTimeout(window._zt);
+    window._zt = setTimeout(function(){ label.classList.remove('show'); }, 2200);
+  } else if(!current){
+    lastZone = "";
+  }
+}
+
+/* ---------- animation loop ---------- */
+function animate(){
+  requestAnimationFrame(animate);
+  var dt = Math.min(clock.getDelta(), 0.05);
+
+  var speed = 7.5;
+  var moving = (Math.abs(joyVec.x)>0.05 || Math.abs(joyVec.y)>0.05);
+  if(moving){
+    var forward = new THREE.Vector3(joyVec.x, 0, joyVec.y);
+    forward.normalize();
+    player.position.x += forward.x*speed*dt;
+    player.position.z += forward.z*speed*dt;
+    var targetRot = Math.atan2(forward.x, forward.z);
+    var curRot = player.rotation.y;
+    var diff = targetRot - curRot;
+    while(diff>Math.PI) diff -= Math.PI*2;
+    while(diff<-Math.PI) diff += Math.PI*2;
+    player.rotation.y += diff*Math.min(1, dt*10);
+
+    var bob = Math.sin(Date.now()*0.015)*0.06;
+    player.userData.legs.forEach(function(leg,i){
+      leg.position.y = 0.28 + Math.abs(Math.sin(Date.now()*0.015 + i*1.5))*0.08;
+    });
+    player.userData.head.position.y = 1.7 + bob;
+  }
+
+  if(!inGallery){
+    var half = 44;
+    player.position.x = Math.max(-half, Math.min(half, player.position.x));
+    player.position.z = Math.max(-half, Math.min(half, player.position.z));
+  } else {
+    player.position.x = Math.max(-13.5, Math.min(13.5, player.position.x));
+    player.position.z = Math.max(-8.5, Math.min(9.5, player.position.z));
+  }
+
+  if(jumping){
+    jumpT += dt*3.2;
+    if(jumpT>=Math.PI){ jumping=false; player.position.y=0; }
+    else { player.position.y = Math.sin(jumpT)*1.6; }
+  }
+
+  // camera follow (third person, behind player)
+  var camOffset = new THREE.Vector3(
+    -Math.sin(player.rotation.y)*8,
+    5.5,
+    -Math.cos(player.rotation.y)*8
+  );
+  var desiredCamPos = player.position.clone().add(camOffset);
+  camera.position.lerp(desiredCamPos, 1-Math.pow(0.001,dt));
+  var lookTarget = player.position.clone().add(new THREE.Vector3(0,1.4,0));
+  camera.lookAt(lookTarget);
+
+  // proximity checks
+  if(!inGallery){
+    nearNPC = player.position.distanceTo(npcPos) < 3.2;
+    nearMuseum = player.position.distanceTo(museumDoorPos) < 3.5;
+    nearExit = false;
+    var prompt = document.getElementById('interactPrompt');
+    if(nearNPC && !document.getElementById('dialogue').classList.contains('show')){
+      prompt.textContent = "輕點螢幕與艾拉互動";
+      prompt.classList.add('show');
+    } else if(nearMuseum){
+      prompt.textContent = "輕點螢幕進入主美術館";
+      prompt.classList.add('show');
+    } else {
+      prompt.classList.remove('show');
+    }
+    npc.lookAt(player.position.x, 1.2, player.position.z);
+  } else {
+    nearExit = player.position.distanceTo(new THREE.Vector3(0,0,9)) < 3;
+
+    nearArt = -1;
+    var bestDist = 2.6;
+    for (var ai=0; ai<artFloorPositions.length; ai++){
+      var ap = artFloorPositions[ai];
+      var dx = player.position.x - ap.x, dz = player.position.z - ap.z;
+      var d = Math.sqrt(dx*dx+dz*dz);
+      if(d < bestDist){ bestDist = d; nearArt = ap.index; }
+    }
+
+    var prompt2 = document.getElementById('interactPrompt');
+    if(nearArt>=0 && !document.getElementById('artCard').classList.contains('show')){
+      prompt2.textContent = "輕點螢幕查看《"+artworks[nearArt].title+"》";
+      prompt2.classList.add('show');
+    } else if(nearExit){
+      prompt2.textContent = "輕點螢幕離開美術館";
+      prompt2.classList.add('show');
+    } else {
+      prompt2.classList.remove('show');
+    }
+  }
+
+  updateZoneLabel();
+
+  renderer.render(scene, camera);
+}
+
+init();
+animate();
+
+})();
+</script>
+</body>
+</html>
