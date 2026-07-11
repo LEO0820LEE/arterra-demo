@@ -4,6 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 <title>ARTERRA 形狀藝術島 Demo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@500;700;900&display=swap" rel="stylesheet">
 <style>
   :root{
     --c-blue:#1B4FBF;
@@ -15,7 +17,7 @@
     --hud-border-strong: rgba(255,255,255,0.35);
   }
   *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
-  html,body{margin:0; padding:0; width:100%; height:100%; overflow:hidden; background:#87ceeb; font-family:"PingFang TC","Microsoft JhengHei",-apple-system,sans-serif; user-select:none;}
+  html,body{margin:0; padding:0; width:100%; height:100%; overflow:hidden; background:#87ceeb; font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",-apple-system,sans-serif; user-select:none;}
   #canvas-wrap{position:fixed; inset:0;}
   canvas{display:block; width:100%; height:100%; touch-action:none;}
 
@@ -32,58 +34,61 @@
   .season-banner .dot{width:6px; height:6px; border-radius:50%; background:var(--c-gold);}
 
   /* top-right cluster */
-  .top-right{position:absolute; top:34px; right:8px; display:flex; flex-direction:column; align-items:flex-end; gap:6px; width:min(76vw,300px);}
+  .top-left{position:absolute; top:34px; left:8px; width:min(60vw,220px);}
+  .top-right{position:absolute; top:34px; right:8px; display:flex; flex-direction:column; align-items:flex-end; gap:8px; width:min(82vw,340px);}
   .panel-row{
     background:var(--hud-bg); backdrop-filter:blur(8px);
     border:0.5px solid var(--hud-border); border-radius:12px;
-    padding:6px 10px; width:100%; display:flex; align-items:center; justify-content:space-between; gap:8px; color:#fff;
+    padding:8px 12px; width:100%; display:flex; align-items:center; justify-content:space-between; gap:8px; color:#fff;
+    box-shadow:0 4px 14px rgba(0,0,0,0.25);
   }
-  .currency{display:flex; gap:10px; font-size:11px;}
-  .currency span{display:flex; align-items:center; gap:3px;}
-  .cur-dot{width:9px; height:9px; border-radius:50%; display:inline-block;}
+  .currency{display:flex; gap:12px; font-size:15px; font-weight:500;}
+  .currency span{display:flex; align-items:center; gap:5px;}
+  .cur-dot{width:12px; height:12px; border-radius:50%; display:inline-block;}
   .cur-inspire{background:var(--c-gold);}
   .cur-gem{background:var(--c-purple);}
   .cur-stamp{background:var(--c-teal);}
 
-  .profile-row{font-size:11px; display:flex; align-items:center; gap:6px; width:100%;}
-  .lvbadge{background:var(--c-blue); border-radius:6px; padding:1px 6px; font-size:10px; font-weight:500;}
-  .xpbar{flex:1; height:5px; background:rgba(255,255,255,0.2); border-radius:3px; overflow:hidden;}
+  .profile-row{font-size:15px; display:flex; align-items:center; gap:8px; width:100%;}
+  .lvbadge{background:var(--c-blue); border-radius:7px; padding:3px 9px; font-size:13px; font-weight:700;}
+  .xpbar{flex:1; height:7px; background:rgba(255,255,255,0.2); border-radius:4px; overflow:hidden;}
   .xpbar i{display:block; height:100%; width:38%; background:var(--c-gold);}
 
-  .main-fn-row{display:flex; gap:6px; width:100%;}
+  .main-fn-row{display:flex; gap:8px; width:100%;}
   .fn-btn{
     flex:1; background:var(--hud-bg); backdrop-filter:blur(8px);
-    border:0.5px solid var(--hud-border); border-radius:10px;
-    padding:8px 4px; color:#fff; font-size:11px; text-align:center; position:relative;
+    border:0.5px solid var(--hud-border); border-radius:12px;
+    padding:11px 6px; color:#fff; font-size:14px; font-weight:500; text-align:center; position:relative;
+    box-shadow:0 3px 10px rgba(0,0,0,0.22);
   }
-  .fn-btn.gold{border-color:rgba(200,149,42,0.6);}
-  .fn-btn .dot-alert{position:absolute; top:-3px; right:-3px; width:8px; height:8px; border-radius:50%; background:#e05252;}
-  .fn-btn i{display:block; font-size:16px; margin-bottom:2px;}
+  .fn-btn.gold{border-color:rgba(200,149,42,0.6); background:linear-gradient(160deg, rgba(200,149,42,0.35), rgba(0,0,0,0.5));}
+  .fn-btn .dot-alert{position:absolute; top:-3px; right:-3px; width:9px; height:9px; border-radius:50%; background:#e05252;}
+  .fn-btn i{display:block; font-size:20px; margin-bottom:2px;}
 
-  .minor-fn-row{display:flex; flex-wrap:wrap; gap:6px; justify-content:flex-end; width:100%;}
+  .minor-fn-row{display:flex; flex-wrap:wrap; gap:8px; justify-content:flex-end; width:100%;}
   .minor-btn{
-    width:38px; height:38px; border-radius:50%;
+    width:46px; height:46px; border-radius:50%;
     background:var(--hud-bg); backdrop-filter:blur(8px);
     border:0.5px solid var(--hud-border); color:#fff;
-    display:flex; align-items:center; justify-content:center; font-size:15px;
+    display:flex; align-items:center; justify-content:center; font-size:21px;
   }
 
   /* left toolbar */
-  .left-toolbar{position:absolute; left:8px; top:50%; transform:translateY(-50%); display:flex; flex-direction:column; gap:8px;}
+  .left-toolbar{position:absolute; left:8px; top:50%; transform:translateY(-50%); display:flex; flex-direction:column; gap:10px;}
   .left-toolbar button{
-    width:36px; height:36px; border-radius:50%;
+    width:44px; height:44px; border-radius:50%;
     background:var(--hud-bg); backdrop-filter:blur(8px);
-    border:0.5px solid var(--hud-border); color:#fff; font-size:15px;
+    border:0.5px solid var(--hud-border); color:#fff; font-size:20px;
   }
 
   /* chat */
-  .chat-box{position:absolute; left:8px; bottom:96px; width:min(58vw,230px);}
-  .chat-tabs{display:flex; gap:4px; margin-bottom:4px;}
-  .chat-tabs span{font-size:10px; color:#fff; background:rgba(0,0,0,0.35); border-radius:6px; padding:2px 6px;}
+  .chat-box{position:absolute; left:8px; bottom:154px; width:min(64vw,280px);}
+  .chat-tabs{display:flex; gap:6px; margin-bottom:6px;}
+  .chat-tabs span{font-size:13px; color:#fff; background:rgba(0,0,0,0.35); border-radius:7px; padding:3px 9px;}
   .chat-tabs span.active{background:var(--c-blue);}
   .chat-log{
     background:var(--hud-bg); backdrop-filter:blur(8px); border:0.5px solid var(--hud-border);
-    border-radius:10px; padding:6px 8px; color:#fff; font-size:11px; line-height:1.6; max-height:60px; overflow:hidden;
+    border-radius:12px; padding:9px 12px; color:#fff; font-size:15px; line-height:1.7; max-height:84px; overflow:hidden;
   }
 
   /* joystick */
@@ -106,11 +111,21 @@
 
   /* interact prompt */
   .interact-prompt{
-    position:absolute; bottom:150px; left:50%; transform:translateX(-50%);
-    background:var(--hud-bg); backdrop-filter:blur(8px); border:0.5px solid var(--hud-border-strong);
-    border-radius:999px; padding:10px 20px; color:#fff; font-size:13px; display:none;
+    position:absolute; bottom:160px; left:50%; transform:translateX(-50%);
+    background:linear-gradient(160deg, rgba(30,20,5,0.75), rgba(0,0,0,0.6));
+    backdrop-filter:blur(10px); border:1.5px solid rgba(200,149,42,0.85);
+    border-radius:999px; padding:14px 30px; display:none;
+    box-shadow:0 6px 24px rgba(0,0,0,0.4), 0 0 18px rgba(200,149,42,0.35);
+    animation:promptBounce 1.4s ease-in-out infinite;
   }
   .interact-prompt.show{display:block;}
+  .interact-prompt span{
+    font-family:"Noto Sans TC",sans-serif; font-weight:900; font-size:19px; letter-spacing:1px;
+    background:linear-gradient(180deg, #FFE9B8 0%, #C8952A 60%, #E8B84B 100%);
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+    text-shadow:0 2px 6px rgba(0,0,0,0.35);
+  }
+  @keyframes promptBounce{ 0%,100%{transform:translateX(-50%) translateY(0);} 50%{transform:translateX(-50%) translateY(-6px);} }
 
   /* bottom right shortcuts */
   .shortcuts{position:absolute; right:10px; bottom:20px; display:flex; flex-direction:column; align-items:flex-end; gap:6px;}
@@ -161,6 +176,19 @@
   .friend-dot{width:8px; height:8px; border-radius:50%;}
   .empty-hint{font-size:12px; color:rgba(255,255,255,0.55); text-align:center; padding:20px 0;}
 
+  .ttt-sheet{width:min(88vw,320px);}
+  .ttt-status{font-size:13px; text-align:center; margin-bottom:12px; color:rgba(255,255,255,0.85); min-height:18px;}
+  .ttt-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-bottom:14px;}
+  .ttt-cell{
+    aspect-ratio:1; border-radius:12px; background:rgba(255,255,255,0.08); border:1px solid var(--hud-border);
+    font-size:30px; font-weight:900; display:flex; align-items:center; justify-content:center; color:#fff;
+  }
+  .ttt-cell.x{color:#6FA8FF;}
+  .ttt-cell.o{color:#E07A9A;}
+  .ttt-restart{
+    width:100%; padding:10px; border-radius:10px; border:none; background:var(--c-blue); color:#fff; font-size:13px; font-weight:500;
+  }
+
   /* dialogue */
   .dialogue{position:absolute; left:0; right:0; bottom:0; padding:16px; display:none; z-index:25;}
   .dialogue.show{display:block;}
@@ -185,16 +213,39 @@
   .art-close{position:absolute; top:10px; right:10px; width:26px; height:26px; border-radius:50%; background:rgba(255,255,255,0.12); border:none; color:#fff;}
 
   .loading{position:fixed; inset:0; background:#0d1220; color:#fff; display:flex; align-items:center; justify-content:center; font-size:13px; z-index:99;}
+
+  .rotate-prompt{
+    position:fixed; inset:0; background:#0d1220; color:#fff; z-index:200;
+    display:none; align-items:center; justify-content:center; flex-direction:column; gap:14px; text-align:center; padding:24px;
+  }
+  .rotate-prompt.show{display:flex;}
+  .rotate-icon{font-size:44px; animation:rotatePulse 1.6s ease-in-out infinite;}
+  .rotate-prompt p{font-size:13px; color:rgba(255,255,255,0.7); max-width:260px; line-height:1.6; margin:0;}
+  @keyframes rotatePulse{ 0%,100%{transform:rotate(0deg);} 50%{transform:rotate(90deg);} }
 </style>
 </head>
 <body>
 
 <div id="loading" class="loading">正在建構 ARTERRA 島嶼…</div>
 
+<div class="rotate-prompt" id="rotatePrompt">
+  <div class="rotate-icon">📱</div>
+  <div style="font-size:15px; font-weight:500;">請將手機橫向操作</div>
+  <p>ARTERRA 設計為橫向遊玩體驗，將手機轉為橫向即可開始探索小島。</p>
+</div>
+
 <div id="canvas-wrap"></div>
 
 <div class="hud">
   <div class="season-banner"><span class="dot"></span>第一季 · 色彩的呼吸 · Day 12</div>
+
+  <div class="top-left">
+    <div class="panel-row profile-row">
+      <span class="lvbadge">Lv 6</span>
+      <span>訪客 · 藝術島民</span>
+      <div class="xpbar"><i></i></div>
+    </div>
+  </div>
 
   <div class="top-right">
     <div class="panel-row currency">
@@ -202,32 +253,27 @@
       <span><i class="cur-dot cur-gem"></i>60</span>
       <span><i class="cur-dot cur-stamp"></i>132</span>
     </div>
-    <div class="panel-row profile-row">
-      <span class="lvbadge">Lv 6</span>
-      <span>訪客 · 藝術島民</span>
-      <div class="xpbar"><i></i></div>
-    </div>
     <div class="main-fn-row">
-      <button class="fn-btn gold" data-panel="pass">通行證<div class="dot-alert"></div></button>
-      <button class="fn-btn gold" data-panel="shop">商城</button>
-      <button class="fn-btn" data-panel="event">限時活動</button>
+      <button class="fn-btn gold" data-panel="pass">🎫 通行證<div class="dot-alert"></div></button>
+      <button class="fn-btn gold" data-panel="shop">🛍 商城</button>
+      <button class="fn-btn" data-panel="event">🎉 活動</button>
     </div>
     <div class="minor-fn-row">
-      <button class="minor-btn" data-panel="friend" title="好友">友</button>
-      <button class="minor-btn" data-panel="home" title="家園">家</button>
-      <button class="minor-btn" data-panel="fashion" title="時裝">裝</button>
-      <button class="minor-btn" data-panel="collection" title="收藏">藏</button>
-      <button class="minor-btn" data-panel="achieve" title="成就">成</button>
-      <button class="minor-btn" data-panel="bag" title="背包">包</button>
-      <button class="minor-btn" data-panel="rank" title="排行">榜</button>
+      <button class="minor-btn" data-panel="friend" title="好友">👥</button>
+      <button class="minor-btn" data-panel="home" title="家園">🏠</button>
+      <button class="minor-btn" data-panel="fashion" title="時裝">👗</button>
+      <button class="minor-btn" data-panel="collection" title="收藏">⭐</button>
+      <button class="minor-btn" data-panel="achieve" title="成就">🏆</button>
+      <button class="minor-btn" data-panel="bag" title="背包">🎒</button>
+      <button class="minor-btn" data-panel="rank" title="排行">📊</button>
     </div>
   </div>
 
   <div class="left-toolbar">
-    <button title="地圖">圖</button>
-    <button title="截圖">拍</button>
-    <button title="表情">笑</button>
-    <button title="設定">設</button>
+    <button title="地圖">🗺️</button>
+    <button title="截圖">📷</button>
+    <button title="表情">😊</button>
+    <button title="設定">⚙️</button>
   </div>
 
   <div class="chat-box">
@@ -239,7 +285,7 @@
   </div>
 
   <div class="zone-label" id="zoneLabel"></div>
-  <div class="interact-prompt" id="interactPrompt">輕點螢幕與艾拉互動</div>
+  <div class="interact-prompt" id="interactPrompt"><span id="interactPromptText">輕點螢幕與艾拉互動</span></div>
 
   <div class="joy-wrap" id="joyWrap">
     <div class="joy-base"></div>
@@ -258,7 +304,7 @@
   <!-- NPC dialogue -->
   <div class="dialogue" id="dialogue">
     <div class="dialogue-box">
-      <div class="dialogue-name">艾拉 · 港口引導員</div>
+      <div class="dialogue-name" id="dialogueName">艾拉 · 港口引導員</div>
       <div class="dialogue-text" id="dialogueText"></div>
       <div class="dialogue-next" id="dialogueNext">輕點繼續 ›</div>
     </div>
@@ -270,6 +316,16 @@
     <div class="art-title" id="artTitle"></div>
     <div class="art-desc" id="artDesc"></div>
   </div>
+
+  <!-- tic-tac-toe with 可可 -->
+  <div class="overlay" id="tictactoe">
+    <div class="sheet ttt-sheet">
+      <div class="sheet-head"><h3>與可可玩井字棋</h3><button class="sheet-close" id="tttClose">✕</button></div>
+      <div class="ttt-status" id="tttStatus">你是 ✕，可可是 ◯ — 輪到你了！</div>
+      <div class="ttt-grid" id="tttGrid"></div>
+      <button class="ttt-restart" id="tttRestart">重新開始</button>
+    </div>
+  </div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -278,36 +334,57 @@
 "use strict";
 
 var scene, camera, renderer, clock;
-var islandGroup, galleryGroup;
+var islandGroup, galleryGroup, guildGroup;
 var player, playerVel = new THREE.Vector3();
 var moveDir = new THREE.Vector2(0,0);
 var jumping=false, jumpT=0;
 var npc, npcHead;
-var museumDoorPos = new THREE.Vector3(0, 0, -22);
-var npcPos = new THREE.Vector3(4, 0, -18);
+var npc2;
+var npc2Pos = new THREE.Vector3(20, 0, 6);
+var guildDoorPos = new THREE.Vector3(-42, 0, 6);
+var guildNPCPos = new THREE.Vector3(0, 0, -3);
+var entranceArrow;
+var guildEntranceArrow;
+var museumDoorPos = new THREE.Vector3(0, 0, -26);
+var npcPos = new THREE.Vector3(9, 0, -22);
 var inGallery = false;
-var nearNPC = false, nearMuseum = false, nearExit=false, nearArt=-1;
-var dialogueLines = [
+var inGuild = false;
+var nearNPC = false, nearMuseum = false, nearExit=false, nearArt=-1, nearNPC2=false;
+var nearGuildDoor=false, nearGuildNPC=false, nearGuildExit=false;
+
+var elaLines = [
   "歡迎來到 ARTERRA，我是艾拉，島上的引導員。",
   "西元 2087 年，一群藝術家與科技創業者在太平洋上建起了這座人工浮島。",
   "『SAI』在古老語言中意為『色彩的呼吸』——這座島的誕生，是為了讓藝術從螢幕走向真實的空間。",
   "『形狀是最初的語言，藝術是最後的家。』這句話刻在中央廣場的石碑上，是我們最重要的信念。",
   "北邊的主美術館裡，收藏著現代、古典與數位三種主題的展品，去看看吧！"
 ];
+
+var guildLines = [
+  "歡迎來到藝術家公會，我是薰特，這裡是公會長辦公室。",
+  "只要是在 ARTERRA 定居的藝術家，都可以在這裡申請屬於自己的「個人藝術館」。",
+  "個人藝術館可以自由佈置、展出你自己的作品，是這座島給每位創作者的禮物。",
+  "讓我幫你送出申請吧！"
+];
+
+var dialogueLines = elaLines; // active speaker's lines (swapped by startDialogue)
 var dialogueIdx = 0;
+var dialogueOnComplete = null;
 
 var artworks = [
   {title:"靜默之海", desc:"現代藝術館館藏。以層疊的藍與灰描繪深海的寧靜，據說是最受訪客收藏的作品之一。", color:0x1B4FBF},
   {title:"色彩的呼吸", desc:"以島名為題的紀念創作，暖橙與金色線條交織，象徵 ARTERRA 誕生的那一刻。", color:0xC8952A},
   {title:"形狀之語", desc:"古典藝術廊風格的幾何構成，探討『形狀是最初的語言』這一島嶼信念。", color:0x6B3FA0},
   {title:"潮間帶", desc:"數位藝術館的生成藝術作品，青綠色調呼應生活休閒區的海岸線。", color:0x0F7B6C},
-  {title:"無題 · 訪客之心", desc:"由聯合創作活動誕生的作品，收錄全島玩家共同繪製的畫布片段。", color:0xE07A5F}
+  {title:"無題 · 訪客之心", desc:"由聯合創作活動誕生的作品，收錄全島玩家共同繪製的畫布片段。", color:0xE07A5F},
+  {title:"晶格之心", desc:"立體雕塑作品。多面體造型象徵島嶼建立初期的結構藍圖，是館內少數的三維展品。", color:0x9B7BD9},
+  {title:"環迴", desc:"立體雕塑作品。環形結構緩緩旋轉，寓意 ARTERRA 上藝術與生活循環不息的日常。", color:0x0F7B6C}
 ];
 
 function init(){
   scene = new THREE.Scene();
-  scene.background = new THREE.Color(0x8fd0e8);
-  scene.fog = new THREE.Fog(0x8fd0e8, 40, 110);
+  scene.background = makeSkyTexture();
+  scene.fog = new THREE.Fog(0xF4C99A, 45, 130);
 
   camera = new THREE.PerspectiveCamera(58, window.innerWidth/window.innerHeight, 0.1, 300);
 
@@ -318,20 +395,32 @@ function init(){
 
   clock = new THREE.Clock();
 
-  var hemi = new THREE.HemisphereLight(0xffffff, 0x557755, 0.9);
+  var hemi = new THREE.HemisphereLight(0xFFE3C2, 0x4a7a52, 1.0);
   scene.add(hemi);
-  var sun = new THREE.DirectionalLight(0xfff2d6, 0.9);
-  sun.position.set(30,40,10);
+  var sun = new THREE.DirectionalLight(0xFFDFAE, 1.05);
+  sun.position.set(35,45,15);
   scene.add(sun);
+  var fillLight = new THREE.DirectionalLight(0xBFD8FF, 0.25);
+  fillLight.position.set(-25,20,-20);
+  scene.add(fillLight);
+
+  // decorative moon (matches the soft dusk atmosphere)
+  var moon = new THREE.Mesh(new THREE.SphereGeometry(4,20,20), new THREE.MeshBasicMaterial({color:0xF5F3EE}));
+  moon.position.set(60, 55, -80);
+  scene.add(moon);
 
   islandGroup = new THREE.Group();
   galleryGroup = new THREE.Group();
   galleryGroup.visible = false;
+  guildGroup = new THREE.Group();
+  guildGroup.visible = false;
   scene.add(islandGroup);
   scene.add(galleryGroup);
+  scene.add(guildGroup);
 
   buildIsland();
   buildGallery();
+  buildGuild();
   buildPlayer();
 
   window.addEventListener('resize', onResize);
@@ -345,40 +434,203 @@ function onResize(){
   camera.aspect = window.innerWidth/window.innerHeight;
   camera.updateProjectionMatrix();
   renderer.setSize(window.innerWidth, window.innerHeight);
+  checkOrientation();
 }
 
+/* ---------- landscape orientation support ---------- */
+function checkOrientation(){
+  var isPortrait = window.innerHeight > window.innerWidth;
+  var isMobileish = Math.min(window.innerWidth, window.innerHeight) < 700;
+  var el = document.getElementById('rotatePrompt');
+  if(el) el.classList.toggle('show', isPortrait && isMobileish);
+}
+
+function tryLockLandscape(){
+  var el = document.documentElement;
+  var reqFs = el.requestFullscreen || el.webkitRequestFullscreen;
+  try{
+    if(reqFs){
+      reqFs.call(el).then(function(){
+        if(screen.orientation && screen.orientation.lock){
+          screen.orientation.lock('landscape').catch(function(){});
+        }
+      }).catch(function(){});
+    } else if(screen.orientation && screen.orientation.lock){
+      screen.orientation.lock('landscape').catch(function(){});
+    }
+  } catch(e){ /* orientation lock not supported (e.g. iOS Safari) - rotate prompt covers this case */ }
+}
+document.addEventListener('touchstart', tryLockLandscape, {once:true});
+document.addEventListener('click', tryLockLandscape, {once:true});
+window.addEventListener('orientationchange', checkOrientation);
+checkOrientation();
+
 /* ---------- geometry helpers ---------- */
-function disk(radius, color, y, segments){
+function disk(radius, color, y, segments, texture){
   var geo = new THREE.CircleGeometry(radius, segments||36);
-  var mat = new THREE.MeshLambertMaterial({color:color});
+  var mat = texture ? new THREE.MeshLambertMaterial({map:texture}) : new THREE.MeshLambertMaterial({color:color});
   var m = new THREE.Mesh(geo, mat);
   m.rotation.x = -Math.PI/2;
   m.position.y = y;
   return m;
 }
 
-function box(w,h,d,color){
+function box(w,h,d,color,texture){
   var geo = new THREE.BoxGeometry(w,h,d);
-  var mat = new THREE.MeshLambertMaterial({color:color});
+  var mat = texture ? new THREE.MeshLambertMaterial({map:texture}) : new THREE.MeshLambertMaterial({color:color});
   return new THREE.Mesh(geo, mat);
 }
 
+/* ---------- procedural material textures (no external images needed) ---------- */
+function shadeHex(hex, amt){
+  var num = hex; var r=(num>>16)+amt, g=((num>>8)&0xff)+amt, b=(num&0xff)+amt;
+  r=Math.max(0,Math.min(255,r)); g=Math.max(0,Math.min(255,g)); b=Math.max(0,Math.min(255,b));
+  return 'rgb('+r+','+g+','+b+')';
+}
+
+function makeSkyTexture(){
+  var c = document.createElement('canvas'); c.width=8; c.height=512;
+  var ctx = c.getContext('2d');
+  var grad = ctx.createLinearGradient(0,0,0,c.height);
+  grad.addColorStop(0, '#6FA3D9');
+  grad.addColorStop(0.35, '#9FC3DE');
+  grad.addColorStop(0.62, '#F0BFAE');
+  grad.addColorStop(0.8, '#F6D5A8');
+  grad.addColorStop(1, '#F9E3B8');
+  ctx.fillStyle = grad;
+  ctx.fillRect(0,0,c.width,c.height);
+  var tex = new THREE.CanvasTexture(c);
+  tex.needsUpdate = true;
+  return tex;
+}
+
+function makeGrassTexture(){
+  var c = document.createElement('canvas'); c.width=128; c.height=128;
+  var ctx = c.getContext('2d');
+  ctx.fillStyle = '#3f9a5c';
+  ctx.fillRect(0,0,128,128);
+  for (var i=0;i<900;i++){
+    var x = Math.random()*128, y = Math.random()*128;
+    var tone = 20 + Math.random()*60 - 30;
+    ctx.fillStyle = shadeHex(0x3f9a5c, tone);
+    ctx.globalAlpha = 0.5;
+    ctx.fillRect(x,y, 2+Math.random()*2, 2+Math.random()*2);
+  }
+  ctx.globalAlpha = 1;
+  var tex = new THREE.CanvasTexture(c);
+  tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
+  tex.repeat.set(18,18);
+  tex.needsUpdate = true;
+  return tex;
+}
+
+function makeMarbleTexture(){
+  var c = document.createElement('canvas'); c.width=256; c.height=256;
+  var ctx = c.getContext('2d');
+  var grad = ctx.createLinearGradient(0,0,256,256);
+  grad.addColorStop(0,'#F7F4EC'); grad.addColorStop(1,'#E7E1D2');
+  ctx.fillStyle = grad;
+  ctx.fillRect(0,0,256,256);
+  ctx.strokeStyle = 'rgba(170,160,140,0.35)';
+  for (var i=0;i<14;i++){
+    ctx.beginPath();
+    var sy = Math.random()*256;
+    ctx.moveTo(0, sy);
+    var cx1=Math.random()*256, cy1=sy+(Math.random()*60-30);
+    var cx2=Math.random()*256, cy2=sy+(Math.random()*60-30);
+    ctx.bezierCurveTo(cx1,cy1,cx2,cy2,256, sy+(Math.random()*40-20));
+    ctx.lineWidth = 0.6+Math.random()*1.2;
+    ctx.stroke();
+  }
+  var tex = new THREE.CanvasTexture(c);
+  tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
+  tex.repeat.set(2,1.4);
+  tex.needsUpdate = true;
+  return tex;
+}
+
+function makeWoodTexture(){
+  var c = document.createElement('canvas'); c.width=128; c.height=128;
+  var ctx = c.getContext('2d');
+  ctx.fillStyle = '#8a6a45';
+  ctx.fillRect(0,0,128,128);
+  for (var y=0;y<128;y+=8){
+    ctx.fillStyle = shadeHex(0x8a6a45, (Math.random()*30-15));
+    ctx.fillRect(0,y,128,7);
+  }
+  ctx.strokeStyle = 'rgba(60,40,20,0.3)';
+  ctx.lineWidth = 1;
+  for (var x=0;x<128;x+=14){
+    ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x+(Math.random()*6-3),128); ctx.stroke();
+  }
+  var tex = new THREE.CanvasTexture(c);
+  tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
+  tex.repeat.set(4,2);
+  tex.needsUpdate = true;
+  return tex;
+}
+
+function makePathTexture(){
+  var c = document.createElement('canvas'); c.width=128; c.height=128;
+  var ctx = c.getContext('2d');
+  ctx.fillStyle = '#D9CBAE';
+  ctx.fillRect(0,0,128,128);
+  ctx.strokeStyle = 'rgba(150,130,100,0.35)';
+  ctx.lineWidth = 2;
+  for (var gx=0; gx<=128; gx+=32){
+    ctx.beginPath(); ctx.moveTo(gx,0); ctx.lineTo(gx,128); ctx.stroke();
+  }
+  for (var gy=0; gy<=128; gy+=32){
+    ctx.beginPath(); ctx.moveTo(0,gy); ctx.lineTo(128,gy); ctx.stroke();
+  }
+  for (var i=0;i<200;i++){
+    var x=Math.random()*128, y=Math.random()*128;
+    ctx.fillStyle = shadeHex(0xD9CBAE, Math.random()*30-15);
+    ctx.globalAlpha = 0.4;
+    ctx.fillRect(x,y,2,2);
+  }
+  ctx.globalAlpha = 1;
+  var tex = new THREE.CanvasTexture(c);
+  tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
+  tex.repeat.set(4,22);
+  tex.needsUpdate = true;
+  return tex;
+}
+
+var grassTex, marbleTex, woodTex, pathTex;
+
 /* ---------- island ---------- */
 function buildIsland(){
-  var base = disk(46, 0x3a8f5c, -0.5, 48);
+  grassTex = makeGrassTexture();
+  marbleTex = makeMarbleTexture();
+  woodTex = makeWoodTexture();
+  pathTex = makePathTexture();
+
+  var base = disk(76, 0x3a8f5c, -0.5, 60, grassTex);
   islandGroup.add(base);
 
   var agora = disk(9, 0xEDEAE0, 0.01, 32);
   agora.position.set(0,0,0);
   islandGroup.add(agora);
 
-  var dock = disk(10, 0x8a6a4a, 0.01, 24);
-  dock.position.set(0,0,26);
+  var dock = disk(15, 0x8a6a4a, 0.01, 32);
+  dock.position.set(0,0,42);
   islandGroup.add(dock);
 
-  var gallery = disk(13, 0xF4F1EA, 0.01, 32);
-  gallery.position.set(0,0,-22);
+  var gallery = disk(30, 0xF4F1EA, 0.01, 44);
+  gallery.position.set(0,0,-42);
   islandGroup.add(gallery);
+
+  // 中央大道 — 港口直通主美術館,讓主要動線清晰、畫面整齊
+  var avenue = box(9, 0.08, 70, 0xD9CBAE, pathTex);
+  avenue.position.set(0, 0.04, 6);
+  islandGroup.add(avenue);
+  var avenueEdgeL = box(0.4, 0.12, 70, 0xC8952A);
+  avenueEdgeL.position.set(-4.6, 0.06, 6);
+  islandGroup.add(avenueEdgeL);
+  var avenueEdgeR = box(0.4, 0.12, 70, 0xC8952A);
+  avenueEdgeR.position.set(4.6, 0.06, 6);
+  islandGroup.add(avenueEdgeR);
 
   var alley = disk(10, 0xB5654A, 0.01, 24);
   alley.position.set(-24,0,0);
@@ -389,33 +641,155 @@ function buildIsland(){
   islandGroup.add(cove);
 
   // water
-  var water = disk(140, 0x2a7fb0, -1.2, 64);
+  var water = disk(210, 0x2a7fb0, -1.2, 64);
   scene.add(water);
 
-  // museum exterior
-  var museum = box(18, 9, 12, 0xFFFFFF);
-  museum.position.set(0, 4.5, -26);
+  // museum exterior - grand scale, dominates roughly a third of the island when approached
+  var museum = box(58, 19, 30, 0xFFFFFF, marbleTex);
+  museum.position.set(0, 9.5, -46);
   islandGroup.add(museum);
-  var roof = box(20, 0.6, 14, 0xE8E4D8);
-  roof.position.set(0, 9.2, -26);
+  var roof = box(60, 1.1, 32, 0xE8E4D8);
+  roof.position.set(0, 19.6, -46);
   islandGroup.add(roof);
-  for (var i=-2;i<=2;i++){
-    var col = box(0.8, 6, 0.8, 0xE8E4D8);
-    col.position.set(i*3.4, 3, -20.3);
+  var pediment = new THREE.Mesh(new THREE.ConeGeometry(28, 3.6, 3), new THREE.MeshLambertMaterial({color:0xEDEAE0}));
+  pediment.rotation.x = Math.PI/2;
+  pediment.rotation.z = Math.PI/2;
+  pediment.position.set(0, 21.9, -31.3);
+  pediment.scale.set(1, 1, 0.35);
+  islandGroup.add(pediment);
+  for (var i=-5;i<=5;i++){
+    var col = box(1.2, 14, 1.2, 0xE8E4D8, marbleTex);
+    col.position.set(i*5.3, 7, -30.6);
     islandGroup.add(col);
   }
-  var doorGlow = disk(2.4, 0xC8952A, 0.02, 24);
+  var steps = box(54, 0.6, 4, 0xE8E4D8, marbleTex);
+  steps.position.set(0, 0.3, -27.5);
+  islandGroup.add(steps);
+
+  var doorGlow = disk(4.2, 0xC8952A, 0.02, 24);
   doorGlow.position.copy(museumDoorPos);
   islandGroup.add(doorGlow);
 
+  // big floating arrow marker above the entrance (bobbing animation in animate())
+  entranceArrow = new THREE.Mesh(
+    new THREE.ConeGeometry(2.0, 3.6, 16),
+    new THREE.MeshBasicMaterial({color:0x2E6BFF})
+  );
+  entranceArrow.rotation.x = Math.PI; // point downward
+  entranceArrow.position.set(museumDoorPos.x, 8.5, museumDoorPos.z);
+  islandGroup.add(entranceArrow);
+  var arrowGlow = new THREE.Mesh(
+    new THREE.SphereGeometry(2.6,16,16),
+    new THREE.MeshBasicMaterial({color:0x2E6BFF, transparent:true, opacity:0.18})
+  );
+  arrowGlow.position.set(museumDoorPos.x, 8.5, museumDoorPos.z);
+  islandGroup.add(arrowGlow);
+
+  // grand entrance gate (大門)
+  var gateFrame = box(14, 10, 0.8, 0xE8E4D8, marbleTex);
+  gateFrame.position.set(0, 5, -29.4);
+  islandGroup.add(gateFrame);
+  var lintel = box(15, 0.9, 1, 0xC8952A);
+  lintel.position.set(0, 10.2, -29.0);
+  islandGroup.add(lintel);
+
+  var doorLeafGeo = new THREE.BoxGeometry(0.25, 7.4, 3.8);
+  var doorMat = new THREE.MeshLambertMaterial({color:0x2b2b2b});
+  var doorLeafL = new THREE.Mesh(doorLeafGeo, doorMat);
+  doorLeafL.position.set(-5.4, 3.9, -27.6);
+  doorLeafL.rotation.y = Math.PI/3.2;
+  islandGroup.add(doorLeafL);
+  var doorLeafR = new THREE.Mesh(doorLeafGeo, doorMat.clone());
+  doorLeafR.position.set(5.4, 3.9, -27.6);
+  doorLeafR.rotation.y = -Math.PI/3.2;
+  islandGroup.add(doorLeafR);
+
+  var handleGeo = new THREE.SphereGeometry(0.22,8,8);
+  var handleMat = new THREE.MeshLambertMaterial({color:0xC8952A});
+  var handleL = new THREE.Mesh(handleGeo, handleMat);
+  handleL.position.set(-3.7, 3.8, -28.9);
+  islandGroup.add(handleL);
+  var handleR = new THREE.Mesh(handleGeo, handleMat.clone());
+  handleR.position.set(3.7, 3.8, -28.9);
+  islandGroup.add(handleR);
+
+  // decorative flags flanking the museum plaza
+  makeFlag(-11, -22, 0x1B4FBF);
+  makeFlag(11, -22, 0xC8952A);
+
+  // street lamps lining the plaza path
+  makeLamp(8, 2); makeLamp(-8, 2);
+  makeLamp(9, 16); makeLamp(-9, 16);
+
+  // extra buildings scattered around the island for a lived-in, bustling feel
+  makeCottage(15, -12, 0xF0DDBB, 0xB5654A, 3.4, 2.6, 3.4);   // 紀念品小舖
+  makeCottage(-27, -8, 0xC98A64, 0x7A4A34, 3.6, 2.8, 3.6);   // 藝術工坊 (artist alley)
+  makeCottage(-20, 6, 0xD9A47A, 0x8a4a2a, 3.0, 2.4, 3.0);    // artist alley second house
+  makeCottage(30, -6, 0xE8C9A0, 0x0F7B6C, 3.0, 2.4, 3.0);    // leisure cove cottage
+  makeCottage(4, 32, 0xDCC49A, 0x8a6a4a, 3.2, 2.4, 3.2);     // dockyard warehouse
+  makeGazebo(-9, -6);                                          // agora side gazebo
+
+  // 小港口 (South Harbor) - opposite the Grand Gallery, player spawn point
+  var harborPier = box(5, 0.5, 26, 0x9a7550, woodTex);
+  harborPier.position.set(0, 0.3, 50);
+  islandGroup.add(harborPier);
+  for (var pp=-1; pp<=1; pp+=2){
+    for (var pz=38; pz<=62; pz+=8){
+      var post = new THREE.Mesh(new THREE.CylinderGeometry(0.18,0.2,1.4,8), new THREE.MeshLambertMaterial({color:0x6a4a2a}));
+      post.position.set(pp*2.6, -0.4, pz);
+      islandGroup.add(post);
+    }
+  }
+
+  // small fishing boat resting at the pier
+  var boatHull = new THREE.Mesh(new THREE.CylinderGeometry(1.6,1.0,4.4,10), new THREE.MeshLambertMaterial({color:0x1B4FBF}));
+  boatHull.rotation.z = Math.PI/2;
+  boatHull.scale.set(1,0.6,1);
+  boatHull.position.set(5.5, 0.4, 58);
+  islandGroup.add(boatHull);
+  var mast = new THREE.Mesh(new THREE.CylinderGeometry(0.1,0.1,4,8), new THREE.MeshLambertMaterial({color:0x8a6a4a}));
+  mast.position.set(5.5, 2.4, 58);
+  islandGroup.add(mast);
+  var sail = new THREE.Mesh(new THREE.ConeGeometry(1.3,3,3), new THREE.MeshLambertMaterial({color:0xF4F1EA, side:THREE.DoubleSide}));
+  sail.rotation.z = Math.PI/2;
+  sail.rotation.y = Math.PI/2;
+  sail.position.set(5.5, 3.2, 58);
+  islandGroup.add(sail);
+
+  // harbor crates
+  var crateColors = [0xB5654A,0x8a6a4a,0xC8952A];
+  for (var cbi=0; cbi<5; cbi++){
+    var crate = box(1,1,1, crateColors[cbi%3]);
+    crate.position.set(-5+Math.random()*3, 0.8, 44+Math.random()*10);
+    crate.rotation.y = Math.random();
+    islandGroup.add(crate);
+  }
+
+  // lighthouse marking the harbor entrance
+  var lighthouseBase = new THREE.Mesh(new THREE.CylinderGeometry(1.4,1.7,7,12), new THREE.MeshLambertMaterial({color:0xF4F1EA}));
+  lighthouseBase.position.set(-9, 3.5, 60);
+  islandGroup.add(lighthouseBase);
+  var lighthouseStripe = new THREE.Mesh(new THREE.CylinderGeometry(1.42,1.5,1.4,12), new THREE.MeshLambertMaterial({color:0xB5654A}));
+  lighthouseStripe.position.set(-9, 5, 60);
+  islandGroup.add(lighthouseStripe);
+  var lighthouseTop = new THREE.Mesh(new THREE.ConeGeometry(1.6,1.8,12), new THREE.MeshLambertMaterial({color:0xC8952A}));
+  lighthouseTop.position.set(-9, 7.9, 60);
+  islandGroup.add(lighthouseTop);
+  var lighthouseLamp = new THREE.Mesh(new THREE.SphereGeometry(0.6,12,12), new THREE.MeshBasicMaterial({color:0xFFE9A8}));
+  lighthouseLamp.position.set(-9, 7, 60);
+  islandGroup.add(lighthouseLamp);
+
+  makeFlag(4, 44, 0x0F7B6C);
+  makeLamp(-6, 48);
+
   // rest area (leisure cove) - dock + benches, decorative only
-  var pier = box(3, 0.4, 10, 0x9a7550);
+  var pier = box(3, 0.4, 10, 0x9a7550, woodTex);
   pier.position.set(24, 0.3, 8);
   islandGroup.add(pier);
   var lantern = new THREE.Mesh(new THREE.SphereGeometry(0.5,12,12), new THREE.MeshLambertMaterial({color:0xE0C888}));
   lantern.position.set(22, 1.6, 4);
   islandGroup.add(lantern);
-  var bench = box(2.4,0.5,0.8,0x8a6a4a);
+  var bench = box(2.4,0.5,0.8,0x8a6a4a, woodTex);
   bench.position.set(26,0.4,2);
   islandGroup.add(bench);
 
@@ -432,68 +806,383 @@ function buildIsland(){
   alleyWall.position.set(-24,2,-4);
   islandGroup.add(alleyWall);
 
+  // 藝術家公會 (Artist Guild Hall) - enterable, west side
+  var guildBody = box(16, 9, 14, 0xD9A47A, marbleTex);
+  guildBody.position.set(-42, 4.5, -2);
+  islandGroup.add(guildBody);
+  var guildRoofBase = box(17.5, 0.8, 15.5, 0x7A4A34);
+  guildRoofBase.position.set(-42, 9.3, -2);
+  islandGroup.add(guildRoofBase);
+  var guildDome = new THREE.Mesh(new THREE.SphereGeometry(4.2,20,12,0,Math.PI*2,0,Math.PI/2), new THREE.MeshLambertMaterial({color:0xC8952A}));
+  guildDome.position.set(-42, 9.7, -2);
+  islandGroup.add(guildDome);
+  for (var gi=-1; gi<=1; gi++){
+    var guildCol = box(0.9, 6, 0.9, 0xEDEAE0, marbleTex);
+    guildCol.position.set(-42+gi*4, 3, 5.3);
+    islandGroup.add(guildCol);
+  }
+  var guildDoorGlow = disk(2.4, 0x6B3FA0, 0.02, 24);
+  guildDoorGlow.position.copy(guildDoorPos);
+  islandGroup.add(guildDoorGlow);
+
+  guildEntranceArrow = new THREE.Mesh(
+    new THREE.ConeGeometry(1.5, 2.8, 16),
+    new THREE.MeshBasicMaterial({color:0x2E6BFF})
+  );
+  guildEntranceArrow.rotation.x = Math.PI;
+  guildEntranceArrow.position.set(guildDoorPos.x, 7.5, guildDoorPos.z);
+  islandGroup.add(guildEntranceArrow);
+  var guildArrowGlow = new THREE.Mesh(
+    new THREE.SphereGeometry(2.0,16,16),
+    new THREE.MeshBasicMaterial({color:0x2E6BFF, transparent:true, opacity:0.18})
+  );
+  guildArrowGlow.position.set(guildDoorPos.x, 7.5, guildDoorPos.z);
+  islandGroup.add(guildArrowGlow);
+  var guildSign = new THREE.Mesh(new THREE.PlaneGeometry(4,1.2), new THREE.MeshLambertMaterial({color:0x6B3FA0, side:THREE.DoubleSide}));
+  guildSign.position.set(-42, 7.2, 5.35);
+  islandGroup.add(guildSign);
+
   // agora fountain
   var fountain = new THREE.Mesh(new THREE.CylinderGeometry(1.6,1.8,1,20), new THREE.MeshLambertMaterial({color:0xffffff}));
-  fountain.position.set(0,0.5,0);
+  fountain.position.set(6.5,0.5,-1);
   islandGroup.add(fountain);
 
-  // trees decoration
-  for (var t=0;t<10;t++){
+  // trees decoration — more trees, ring around the island for a lush,
+  // Animal-Crossing-style border, plus a few clustered near paths.
+  // (kept clear of the new central avenue so the main sightline stays clean)
+  var leafTones = [0x4a9a5a, 0x5aab63, 0x3f8a52, 0x6bb56a];
+  for (var t=0;t<34;t++){
     var ang = Math.random()*Math.PI*2;
-    var r = 30+Math.random()*10;
-    addTree(Math.cos(ang)*r, Math.sin(ang)*r*0.6 - 6);
+    var r = 50+Math.random()*20;
+    var tx = Math.cos(ang)*r, tz = Math.sin(ang)*r*0.6 - 6;
+    if(inAvenue(tx,tz)) continue;
+    addTree(tx, tz, leafTones[t%leafTones.length]);
+  }
+  // a few extra trees closer in, framing the main paths without crowding them
+  var innerTreeSpots = [[-16,-6],[16,-6],[-30,14],[30,14],[-14,30],[14,30]];
+  for (var it=0; it<innerTreeSpots.length; it++){
+    addTree(innerTreeSpots[it][0], innerTreeSpots[it][1], leafTones[it%leafTones.length]);
+  }
+
+  // rounded bush clusters + tiny flower dots along the main plaza, for a
+  // tidy, storybook Animal-Crossing feel rather than bare grass
+  var bushSpots = [[-8,-14],[8,-14],[-30,-4],[30,6],[10,34],[-10,34]];
+  for (var bsi=0; bsi<bushSpots.length; bsi++){
+    addBushCluster(bushSpots[bsi][0], bushSpots[bsi][1]);
+  }
+  var flowerColors = [0xE07A9A,0xF2D24C,0xFFFFFF,0x9B7BD9];
+  for (var fl=0; fl<24; fl++){
+    var fang = Math.random()*Math.PI*2;
+    var fr = 6+Math.random()*30;
+    var fx = Math.cos(fang)*fr, fz = Math.sin(fang)*fr - 2;
+    if(inAvenue(fx,fz)) continue;
+    addFlowerDot(fx, fz, flowerColors[fl%flowerColors.length]);
   }
 }
 
-function addTree(x,z){
+/* checks whether a point falls on the central avenue, so decorations avoid it */
+function inAvenue(x,z){
+  return Math.abs(x) < 6.5 && z > -30 && z < 42;
+}
+
+function addTree(x,z,leafColor){
   var trunk = new THREE.Mesh(new THREE.CylinderGeometry(0.25,0.3,2,8), new THREE.MeshLambertMaterial({color:0x7a5a3a}));
   trunk.position.set(x,1,z);
-  var leaves = new THREE.Mesh(new THREE.SphereGeometry(1.3,10,10), new THREE.MeshLambertMaterial({color:0x4a9a5a}));
+  var leaves = new THREE.Mesh(new THREE.SphereGeometry(1.3,10,10), new THREE.MeshLambertMaterial({color:leafColor||0x4a9a5a}));
   leaves.position.set(x,2.4,z);
   islandGroup.add(trunk);
   islandGroup.add(leaves);
 }
 
+/* rounded topiary bush cluster — tidy, storybook decoration */
+function addBushCluster(x,z){
+  var tones = [0x5aab63,0x4a9a5a,0x6bb56a];
+  for (var i=0;i<3;i++){
+    var s = 0.5+Math.random()*0.35;
+    var bush = new THREE.Mesh(new THREE.SphereGeometry(s,12,12), new THREE.MeshLambertMaterial({color:tones[i%tones.length]}));
+    bush.position.set(x+(Math.random()*1.2-0.6), s*0.7, z+(Math.random()*1.2-0.6));
+    islandGroup.add(bush);
+  }
+}
+
+/* tiny flower dot — cheap, cheerful ground decoration */
+function addFlowerDot(x,z,color){
+  var petal = new THREE.Mesh(new THREE.SphereGeometry(0.14,8,8), new THREE.MeshLambertMaterial({color:color}));
+  petal.position.set(x,0.14,z);
+  islandGroup.add(petal);
+}
+
+/* small chibi cottage - body + pyramid roof, for a lived-in town feel */
+function makeCottage(x,z,bodyColor,roofColor,w,h,d){
+  w=w||3; h=h||2.4; d=d||3;
+  var body = box(w,h,d,bodyColor);
+  body.position.set(x,h/2,z);
+  islandGroup.add(body);
+  var roof = new THREE.Mesh(new THREE.ConeGeometry(w*0.78,1.7,4), new THREE.MeshLambertMaterial({color:roofColor}));
+  roof.rotation.y = Math.PI/4;
+  roof.position.set(x,h+0.85,z);
+  islandGroup.add(roof);
+  var door = box(0.7,1.1,0.1,0x3a2a1a);
+  door.position.set(x, 0.55, z+d/2+0.02);
+  islandGroup.add(door);
+}
+
+/* street lamp */
+function makeLamp(x,z){
+  var pole = new THREE.Mesh(new THREE.CylinderGeometry(0.08,0.08,2.4,8), new THREE.MeshLambertMaterial({color:0x3a3a3a}));
+  pole.position.set(x,1.2,z);
+  islandGroup.add(pole);
+  var lamp = new THREE.Mesh(new THREE.SphereGeometry(0.28,10,10), new THREE.MeshLambertMaterial({color:0xF5D98A}));
+  lamp.position.set(x,2.5,z);
+  islandGroup.add(lamp);
+}
+
+/* decorative pole flag */
+function makeFlag(x,z,color){
+  var pole = new THREE.Mesh(new THREE.CylinderGeometry(0.05,0.05,3.4,6), new THREE.MeshLambertMaterial({color:0xcccccc}));
+  pole.position.set(x,1.7,z);
+  islandGroup.add(pole);
+  var flag = new THREE.Mesh(new THREE.PlaneGeometry(0.9,0.6), new THREE.MeshLambertMaterial({color:color, side:THREE.DoubleSide}));
+  flag.position.set(x+0.45,3.1,z);
+  islandGroup.add(flag);
+}
+
+/* small open-air gazebo, decorative */
+function makeGazebo(x,z){
+  var roof = new THREE.Mesh(new THREE.ConeGeometry(2.2,1.4,8), new THREE.MeshLambertMaterial({color:0xC8952A}));
+  roof.position.set(x,3.2,z);
+  islandGroup.add(roof);
+  for (var a=0;a<4;a++){
+    var ang = a*(Math.PI/2)+Math.PI/4;
+    var pillar = new THREE.Mesh(new THREE.CylinderGeometry(0.12,0.12,2.4,8), new THREE.MeshLambertMaterial({color:0xEDEAE0}));
+    pillar.position.set(x+Math.cos(ang)*1.7, 1.2, z+Math.sin(ang)*1.7);
+    islandGroup.add(pillar);
+  }
+}
+
 /* ---------- gallery interior ---------- */
 var artMeshes = [];
 var artFloorPositions = []; // {x,z,title} - used for proximity interaction like NPC
+var sculptureMeshes = [];
 function buildGallery(){
-  var floor = box(30,0.4,20,0xF4F1EA);
+  var floor = box(44,0.4,28,0xF4F1EA);
   floor.position.set(0,-0.2,0);
   galleryGroup.add(floor);
-  var ceil = box(30,0.4,20,0xEDEAE0);
-  ceil.position.set(0,7,0);
+  var ceil = box(44,0.4,28,0xEDEAE0);
+  ceil.position.set(0,8,0);
   galleryGroup.add(ceil);
 
-  var backWall = box(30,7,0.4,0xffffff);
-  backWall.position.set(0,3.5,-10);
+  var backWall = box(44,8,0.4,0xffffff);
+  backWall.position.set(0,4,-14);
   galleryGroup.add(backWall);
-  var leftWall = box(0.4,7,20,0xffffff);
-  leftWall.position.set(-15,3.5,0);
+  var leftWall = box(0.4,8,28,0xffffff);
+  leftWall.position.set(-22,4,0);
   galleryGroup.add(leftWall);
-  var rightWall = box(0.4,7,20,0xffffff);
-  rightWall.position.set(15,3.5,0);
+  var rightWall = box(0.4,8,28,0xffffff);
+  rightWall.position.set(22,4,0);
   galleryGroup.add(rightWall);
 
-  var exitGlow = disk(2, 0xC8952A, 0.02, 24);
-  exitGlow.position.set(0,0,9);
+  var exitGlow = disk(2.2, 0xC8952A, 0.02, 24);
+  exitGlow.position.set(0,0,12);
   galleryGroup.add(exitGlow);
 
   var positions = [
-    [-10, 3.2, -9.7], [-5, 3.2, -9.7], [0, 3.2, -9.7], [5, 3.2, -9.7], [10, 3.2, -9.7]
+    [-16, 3.4, -13.3], [-8, 3.4, -13.3], [0, 3.4, -13.3], [8, 3.4, -13.3], [16, 3.4, -13.3]
   ];
-  for (var i=0;i<artworks.length;i++){
+  for (var i=0;i<positions.length;i++){
     var a = artworks[i];
     var frame = box(3.2,3.6,0.15, 0x3a3a3a);
     frame.position.set(positions[i][0], positions[i][1], positions[i][2]);
     galleryGroup.add(frame);
-    var canvasMesh = box(2.8,3.2,0.05, a.color);
+    var artTex = makeArtTexture(i, a.color);
+    var canvasGeo = new THREE.PlaneGeometry(2.8, 3.2);
+    var canvasMesh = new THREE.Mesh(canvasGeo, new THREE.MeshLambertMaterial({map:artTex}));
     canvasMesh.position.set(positions[i][0], positions[i][1], positions[i][2]+0.12);
     canvasMesh.userData.artIndex = i;
     galleryGroup.add(canvasMesh);
     artMeshes.push(canvasMesh);
     artFloorPositions.push({x:positions[i][0], z:positions[i][2]+2.6, index:i});
   }
+
+  // 立體雕塑作品 — 放在展廳中央開放空間的展示台上
+  var sculptureSpecs = [
+    {x:-9, z:-3, shape:'icosahedron'},
+    {x:9, z:-3, shape:'torus'}
+  ];
+  for (var si=0; si<sculptureSpecs.length; si++){
+    var artIdx = positions.length + si; // 5, 6
+    var spec = sculptureSpecs[si];
+    var a2 = artworks[artIdx];
+
+    var pedestal = box(1.5,1.2,1.5, 0xEDEAE0, marbleTex);
+    pedestal.position.set(spec.x, 0.6, spec.z);
+    galleryGroup.add(pedestal);
+
+    var sculptGeo = spec.shape==='torus'
+      ? new THREE.TorusGeometry(0.72,0.28,14,28)
+      : new THREE.IcosahedronGeometry(0.88,0);
+    var sculpt = new THREE.Mesh(sculptGeo, new THREE.MeshLambertMaterial({color:a2.color}));
+    sculpt.position.set(spec.x, 1.2+0.9, spec.z);
+    sculpt.userData.artIndex = artIdx;
+    galleryGroup.add(sculpt);
+    sculpt.userData.spin = true;
+    sculptureMeshes.push(sculpt);
+
+    artFloorPositions.push({x:spec.x, z:spec.z+2.0, index:artIdx});
+  }
+}
+
+/* ---------- artist guild interior ---------- */
+var guildLeader;
+function buildGuild(){
+  var floor = box(20,0.4,16,0xEDE0D0);
+  floor.position.set(0,-0.2,0);
+  guildGroup.add(floor);
+  var ceil = box(20,0.4,16,0xE0D3C0);
+  ceil.position.set(0,6.5,0);
+  guildGroup.add(ceil);
+
+  var backWall = box(20,6.5,0.4,0xF2E9DC);
+  backWall.position.set(0,3.25,-8);
+  guildGroup.add(backWall);
+  var leftWall = box(0.4,6.5,16,0xF2E9DC);
+  leftWall.position.set(-10,3.25,0);
+  guildGroup.add(leftWall);
+  var rightWall = box(0.4,6.5,16,0xF2E9DC);
+  rightWall.position.set(10,3.25,0);
+  guildGroup.add(rightWall);
+
+  // a few display easels around the room for atmosphere (decorative only)
+  for (var e=-1; e<=1; e++){
+    var easel = box(0.2,3,2,0x8a6a4a);
+    easel.position.set(e*6, 1.5, -7.5);
+    guildGroup.add(easel);
+  }
+
+  var exitGlow = disk(2, 0x6B3FA0, 0.02, 24);
+  exitGlow.position.set(0,0,7);
+  guildGroup.add(exitGlow);
+
+  guildLeader = makeCritter(0xC8952A, 0x6a4a1a);
+  guildLeader.position.copy(guildNPCPos);
+  guildLeader.rotation.y = Math.PI;
+  guildGroup.add(guildLeader);
+
+  var desk = box(3,1,1.2,0x8a6a4a, woodTex);
+  desk.position.set(0,0.5,-4.5);
+  guildGroup.add(desk);
+}
+
+/* generate an original, non-infringing abstract pattern per artwork (canvas -> texture) */
+function makeArtTexture(idx, baseColorHex){
+  var c = document.createElement('canvas');
+  c.width = 256; c.height = 292;
+  var ctx = c.getContext('2d');
+  var base = '#'+baseColorHex.toString(16).padStart(6,'0');
+
+  function shade(hex, amt){
+    var num = parseInt(hex.slice(1),16);
+    var r = Math.max(0,Math.min(255,(num>>16)+amt));
+    var g = Math.max(0,Math.min(255,((num>>8)&0xff)+amt));
+    var b = Math.max(0,Math.min(255,(num&0xff)+amt));
+    return 'rgb('+r+','+g+','+b+')';
+  }
+
+  // background gradient
+  var grad = ctx.createLinearGradient(0,0,0,c.height);
+  grad.addColorStop(0, shade(base,40));
+  grad.addColorStop(1, shade(base,-40));
+  ctx.fillStyle = grad;
+  ctx.fillRect(0,0,c.width,c.height);
+
+  if(idx===0){
+    // 靜默之海 - layered wave bands
+    for (var w=0; w<6; w++){
+      ctx.beginPath();
+      var yy = 40 + w*38;
+      ctx.moveTo(0, yy);
+      for (var x=0; x<=c.width; x+=16){
+        ctx.lineTo(x, yy + Math.sin((x/40)+w)*10);
+      }
+      ctx.lineTo(c.width, c.height); ctx.lineTo(0, c.height); ctx.closePath();
+      ctx.fillStyle = shade(base, -10 + w*8);
+      ctx.globalAlpha = 0.55;
+      ctx.fill();
+    }
+    ctx.globalAlpha = 1;
+    ctx.beginPath(); ctx.arc(200,55,22,0,Math.PI*2);
+    ctx.fillStyle = shade(base,90); ctx.fill();
+  } else if(idx===1){
+    // 色彩的呼吸 - radiating sunburst
+    ctx.save();
+    ctx.translate(c.width/2, c.height/2);
+    var rays = 16;
+    for (var r=0;r<rays;r++){
+      ctx.rotate(Math.PI*2/rays);
+      ctx.beginPath();
+      ctx.moveTo(0,0);
+      ctx.lineTo(140, -10);
+      ctx.lineTo(140, 10);
+      ctx.closePath();
+      ctx.fillStyle = shade(base, (r%2===0?50:-20));
+      ctx.globalAlpha = 0.75;
+      ctx.fill();
+    }
+    ctx.restore();
+    ctx.globalAlpha = 1;
+    ctx.beginPath(); ctx.arc(c.width/2,c.height/2,30,0,Math.PI*2);
+    ctx.fillStyle = shade(base,80); ctx.fill();
+  } else if(idx===2){
+    // 形狀之語 - geometric grid of shapes
+    var shapes = ['tri','rect','circ'];
+    var gsize = 44;
+    var s=0;
+    for (var yy2=10; yy2<c.height-10; yy2+=gsize){
+      for (var xx=10; xx<c.width-10; xx+=gsize){
+        var kind = shapes[s%3]; s++;
+        ctx.fillStyle = shade(base, ((s%4)*22 - 33));
+        ctx.globalAlpha = 0.85;
+        if(kind==='rect'){ ctx.fillRect(xx,yy2,gsize-10,gsize-10); }
+        else if(kind==='circ'){ ctx.beginPath(); ctx.arc(xx+gsize/2-5,yy2+gsize/2-5,gsize/2-6,0,Math.PI*2); ctx.fill(); }
+        else { ctx.beginPath(); ctx.moveTo(xx,yy2+gsize-10); ctx.lineTo(xx+(gsize-10)/2,yy2); ctx.lineTo(xx+gsize-10,yy2+gsize-10); ctx.closePath(); ctx.fill(); }
+      }
+    }
+    ctx.globalAlpha = 1;
+  } else if(idx===3){
+    // 潮間帶 - generative dot matrix
+    for (var yy3=14; yy3<c.height-14; yy3+=22){
+      for (var xx3=14; xx3<c.width-14; xx3+=22){
+        var rad = 4 + ((xx3*yy3)%13)*0.7;
+        ctx.beginPath();
+        ctx.arc(xx3,yy3,rad,0,Math.PI*2);
+        ctx.fillStyle = shade(base, ((xx3+yy3)%60)-30);
+        ctx.globalAlpha = 0.8;
+        ctx.fill();
+      }
+    }
+    ctx.globalAlpha = 1;
+  } else {
+    // 無題訪客之心 - collaged mosaic patchwork
+    var cell = 26;
+    for (var yy4=0; yy4<c.height; yy4+=cell){
+      for (var xx4=0; xx4<c.width; xx4+=cell){
+        var tone = shade(base, (Math.sin(xx4*0.13+yy4*0.09)*50));
+        ctx.fillStyle = tone;
+        ctx.globalAlpha = 0.9;
+        ctx.fillRect(xx4,yy4,cell-2,cell-2);
+      }
+    }
+    ctx.globalAlpha = 1;
+  }
+
+  // subtle border / signature dot to feel like a finished piece
+  ctx.strokeStyle = 'rgba(255,255,255,0.35)';
+  ctx.lineWidth = 6;
+  ctx.strokeRect(6,6,c.width-12,c.height-12);
+
+  var tex = new THREE.CanvasTexture(c);
+  tex.needsUpdate = true;
+  return tex;
 }
 
 /* ---------- player ---------- */
@@ -518,6 +1207,8 @@ function makeCritter(bodyColor, earColor){
   var nose = new THREE.Mesh(noseGeo, new THREE.MeshLambertMaterial({color:earColor}));
   nose.position.set(0,1.6,0.95); g.add(nose);
   g.userData.head = head;
+  g.userData.headBaseY = 1.7;
+  g.userData.legBaseY = 0.28;
   g.userData.legs = [];
   var legMat = new THREE.MeshLambertMaterial({color:bodyColor});
   for (var i=0;i<4;i++){
@@ -531,15 +1222,127 @@ function makeCritter(bodyColor, earColor){
   return g;
 }
 
+/* 可愛小黃金鼠 — 玩家主要角色造型 */
+function makeHamster(){
+  var g = new THREE.Group();
+  var fur = 0xE8B673;      // 金黃色毛髮
+  var belly = 0xFFEFD6;    // 米白色肚肚/腳掌
+  var earTone = 0xF6C9A0;
+
+  var body = new THREE.Mesh(new THREE.SphereGeometry(0.82,18,18), new THREE.MeshLambertMaterial({color:fur}));
+  body.scale.set(1.05,0.8,1.15);
+  body.position.y = 0.72;
+  g.add(body);
+
+  var bellyPatch = new THREE.Mesh(new THREE.SphereGeometry(0.5,16,16), new THREE.MeshLambertMaterial({color:belly}));
+  bellyPatch.scale.set(0.85,0.65,0.55);
+  bellyPatch.position.set(0,0.5,0.5);
+  g.add(bellyPatch);
+
+  var head = new THREE.Mesh(new THREE.SphereGeometry(0.6,18,18), new THREE.MeshLambertMaterial({color:fur}));
+  head.scale.set(1,0.95,0.95);
+  head.position.set(0,1.5,0.38);
+  g.add(head);
+
+  // 圓潤的鼓鼓臉頰(倉鼠招牌特徵)
+  var cheekGeo = new THREE.SphereGeometry(0.27,14,14);
+  var cheekMat = new THREE.MeshLambertMaterial({color:fur});
+  var cheekL = new THREE.Mesh(cheekGeo,cheekMat); cheekL.position.set(-0.48,1.32,0.52); g.add(cheekL);
+  var cheekR = new THREE.Mesh(cheekGeo,cheekMat); cheekR.position.set(0.48,1.32,0.52); g.add(cheekR);
+
+  // 小圓耳朵(不是尖的)
+  var earGeo = new THREE.SphereGeometry(0.21,12,12);
+  var earMat = new THREE.MeshLambertMaterial({color:earTone});
+  var earL = new THREE.Mesh(earGeo,earMat); earL.scale.set(1,1,0.4); earL.position.set(-0.3,1.98,0.28); g.add(earL);
+  var earR = new THREE.Mesh(earGeo,earMat); earR.scale.set(1,1,0.4); earR.position.set(0.3,1.98,0.28); g.add(earR);
+
+  // 眼睛(含小亮點增加可愛感)
+  var eyeGeo = new THREE.SphereGeometry(0.075,10,10);
+  var eyeMat = new THREE.MeshBasicMaterial({color:0x1a1210});
+  var eyeL = new THREE.Mesh(eyeGeo,eyeMat); eyeL.position.set(-0.2,1.56,0.88); g.add(eyeL);
+  var eyeR = new THREE.Mesh(eyeGeo,eyeMat); eyeR.position.set(0.2,1.56,0.88); g.add(eyeR);
+  var shineGeo = new THREE.SphereGeometry(0.022,6,6);
+  var shineMat = new THREE.MeshBasicMaterial({color:0xffffff});
+  var shineL = new THREE.Mesh(shineGeo,shineMat); shineL.position.set(-0.16,1.6,0.93); g.add(shineL);
+  var shineR = new THREE.Mesh(shineGeo,shineMat); shineR.position.set(0.24,1.6,0.93); g.add(shineR);
+
+  var nose = new THREE.Mesh(new THREE.SphereGeometry(0.065,10,10), new THREE.MeshLambertMaterial({color:0xD98A8A}));
+  nose.position.set(0,1.44,0.95); g.add(nose);
+
+  // 小小手掌腳掌
+  var pawMat = new THREE.MeshLambertMaterial({color:belly});
+  var legs = [];
+  var pawPositions = [[-0.36,0.2,0.48],[0.36,0.2,0.48],[-0.38,0.18,-0.32],[0.38,0.18,-0.32]];
+  for (var i=0;i<4;i++){
+    var paw = new THREE.Mesh(new THREE.SphereGeometry(0.15,10,10), pawMat);
+    paw.position.set(pawPositions[i][0],pawPositions[i][1],pawPositions[i][2]);
+    g.add(paw);
+    legs.push(paw);
+  }
+
+  // 小小尾巴
+  var tail = new THREE.Mesh(new THREE.SphereGeometry(0.11,10,10), new THREE.MeshLambertMaterial({color:belly}));
+  tail.position.set(0,0.58,-0.8);
+  g.add(tail);
+
+  g.userData.head = head;
+  g.userData.headBaseY = 1.5;
+  g.userData.legBaseY = 0.19;
+  g.userData.legs = legs;
+  return g;
+}
+
+/* 角色頭頂名字標籤(隨時面向鏡頭的粗體浮動文字) */
+function makeNameSprite(text){
+  var c = document.createElement('canvas');
+  c.width = 320; c.height = 120;
+  var ctx = c.getContext('2d');
+  ctx.fillStyle = 'rgba(15,10,5,0.55)';
+  var rx=30, ry=30, rw=260, rh=60, rr=30;
+  ctx.beginPath();
+  ctx.moveTo(rx+rr,ry);
+  ctx.arcTo(rx+rw,ry,rx+rw,ry+rh,rr);
+  ctx.arcTo(rx+rw,ry+rh,rx,ry+rh,rr);
+  ctx.arcTo(rx,ry+rh,rx,ry,rr);
+  ctx.arcTo(rx,ry,rx+rw,ry,rr);
+  ctx.closePath();
+  ctx.fill();
+
+  ctx.font = 'bold 52px "Noto Sans TC", sans-serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.lineWidth = 7;
+  ctx.strokeStyle = 'rgba(0,0,0,0.55)';
+  ctx.strokeText(text, 160, 62);
+  ctx.fillStyle = '#FFE9B8';
+  ctx.fillText(text, 160, 62);
+
+  var tex = new THREE.CanvasTexture(c);
+  var mat = new THREE.SpriteMaterial({map:tex, depthTest:false});
+  var sprite = new THREE.Sprite(mat);
+  sprite.scale.set(2.4, 0.9, 1);
+  return sprite;
+}
+
+
 function buildPlayer(){
-  player = makeCritter(0xF2B04C, 0x8a4a1a);
-  player.position.set(0, 0, 18);
-  islandGroup.add(player);
+  player = makeHamster();
+  player.position.set(0, 0, 46);
+  scene.add(player); // added to scene root (not islandGroup) so it stays visible when islandGroup is hidden inside the gallery
+
+  var nameTag = makeNameSprite('餅餅');
+  nameTag.position.set(0, 2.55, 0);
+  player.add(nameTag);
 
   npc = makeCritter(0x7BA7D9, 0x2a4a6a);
   npc.position.copy(npcPos);
   npc.rotation.y = Math.PI;
   islandGroup.add(npc);
+
+  npc2 = makeCritter(0xE07A9A, 0x7a2a4a);
+  npc2.position.copy(npc2Pos);
+  npc2.rotation.y = Math.PI;
+  islandGroup.add(npc2);
 }
 
 /* ---------- fixed disc joystick: drag direction = move direction ---------- */
@@ -659,10 +1462,14 @@ function setupUI(){
   });
 
   document.getElementById('interactPrompt').addEventListener('click', function(){
-    if(nearNPC && !inGallery){ startDialogue(); }
-    else if(nearMuseum && !inGallery){ enterGallery(); }
+    if(nearNPC && !inGallery && !inGuild){ startDialogue(elaLines, '艾拉 · 港口引導員'); }
+    else if(nearNPC2 && !inGallery && !inGuild){ openTicTacToe(); }
+    else if(nearGuildDoor && !inGallery && !inGuild){ enterGuild(); }
+    else if(nearMuseum && !inGallery && !inGuild){ enterGallery(); }
     else if(nearArt>=0 && inGallery){ showArt(nearArt); }
     else if(nearExit && inGallery){ exitGallery(); }
+    else if(nearGuildNPC && inGuild){ startDialogue(guildLines, '薰特 · 公會長', openGuildApplyPanel); }
+    else if(nearGuildExit && inGuild){ exitGuild(); }
   });
 
   document.getElementById('dialogue').addEventListener('click', function(){
@@ -674,6 +1481,19 @@ function setupUI(){
   document.getElementById('artClose').addEventListener('click', function(e){
     e.stopPropagation();
     document.getElementById('artCard').classList.remove('show');
+  });
+
+  document.getElementById('tictactoe').addEventListener('click', function(e){
+    if(e.target===this) this.classList.remove('show');
+  });
+  document.getElementById('tttClose').addEventListener('click', function(){
+    document.getElementById('tictactoe').classList.remove('show');
+  });
+  document.getElementById('tttRestart').addEventListener('click', tttReset);
+  document.getElementById('tttGrid').addEventListener('click', function(e){
+    var cell = e.target.closest('.ttt-cell');
+    if(!cell) return;
+    tttPlayerMove(parseInt(cell.getAttribute('data-idx'),10));
   });
 }
 
@@ -689,20 +1509,116 @@ function closePanel(){
   document.getElementById('overlay').classList.remove('show');
 }
 
-function startDialogue(){
+/* ---------- tic-tac-toe with 可可 ---------- */
+var tttBoard = ['','','','','','','','',''];
+var tttOver = false;
+var WIN_LINES = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
+
+function tttCheckWinner(b){
+  for (var i=0;i<WIN_LINES.length;i++){
+    var l = WIN_LINES[i];
+    if(b[l[0]] && b[l[0]]===b[l[1]] && b[l[1]]===b[l[2]]) return b[l[0]];
+  }
+  if(b.indexOf('')===-1) return 'draw';
+  return null;
+}
+
+function tttRenderBoard(){
+  var grid = document.getElementById('tttGrid');
+  grid.innerHTML = '';
+  for (var i=0;i<9;i++){
+    var cell = document.createElement('div');
+    cell.className = 'ttt-cell' + (tttBoard[i]==='X'?' x':'') + (tttBoard[i]==='O'?' o':'');
+    cell.textContent = tttBoard[i]==='X' ? '✕' : (tttBoard[i]==='O' ? '◯' : '');
+    cell.setAttribute('data-idx', i);
+    grid.appendChild(cell);
+  }
+}
+
+function tttPlayerMove(idx){
+  if(tttOver || tttBoard[idx]!=='') return;
+  tttBoard[idx] = 'X';
+  tttRenderBoard();
+  var result = tttCheckWinner(tttBoard);
+  if(result){ tttEnd(result); return; }
+
+  document.getElementById('tttStatus').textContent = '可可思考中…';
+  setTimeout(function(){
+    tttAiMove();
+    var r2 = tttCheckWinner(tttBoard);
+    tttRenderBoard();
+    if(r2){ tttEnd(r2); }
+    else { document.getElementById('tttStatus').textContent = '你是 ✕，可可是 ◯ — 輪到你了！'; }
+  }, 450);
+}
+
+function tttAiMove(){
+  // 1) take a winning move if available
+  for (var i=0;i<9;i++){
+    if(tttBoard[i]==='') { tttBoard[i]='O'; if(tttCheckWinner(tttBoard)==='O') return; tttBoard[i]=''; }
+  }
+  // 2) block player's winning move
+  for (var j=0;j<9;j++){
+    if(tttBoard[j]==='') { tttBoard[j]='X'; if(tttCheckWinner(tttBoard)==='X'){ tttBoard[j]='O'; return; } tttBoard[j]=''; }
+  }
+  // 3) take center, then a random empty cell
+  if(tttBoard[4]===''){ tttBoard[4]='O'; return; }
+  var empties = [];
+  for (var k=0;k<9;k++){ if(tttBoard[k]==='') empties.push(k); }
+  if(empties.length>0){ tttBoard[empties[Math.floor(Math.random()*empties.length)]] = 'O'; }
+}
+
+function tttEnd(result){
+  tttOver = true;
+  var status = document.getElementById('tttStatus');
+  if(result==='X') status.textContent = '🎉 你贏了！';
+  else if(result==='O') status.textContent = '可可獲勝，再挑戰一次吧！';
+  else status.textContent = '平手！勢均力敵～';
+}
+
+function tttReset(){
+  tttBoard = ['','','','','','','','',''];
+  tttOver = false;
+  document.getElementById('tttStatus').textContent = '你是 ✕，可可是 ◯ — 輪到你了！';
+  tttRenderBoard();
+}
+
+function openTicTacToe(){
+  tttReset();
+  document.getElementById('tictactoe').classList.add('show');
+}
+
+function startDialogue(lines, speakerName, onComplete){
+  dialogueLines = lines || elaLines;
   dialogueIdx = 0;
+  dialogueOnComplete = onComplete || null;
+  document.getElementById('dialogueName').textContent = speakerName || '艾拉 · 港口引導員';
   document.getElementById('dialogueText').textContent = dialogueLines[0];
   document.getElementById('dialogue').classList.add('show');
   document.getElementById('interactPrompt').classList.remove('show');
 }
 function endDialogue(){
   document.getElementById('dialogue').classList.remove('show');
+  if(dialogueOnComplete){
+    var cb = dialogueOnComplete;
+    dialogueOnComplete = null;
+    cb();
+  }
+}
+
+function openGuildApplyPanel(){
+  document.getElementById('sheetContent').innerHTML =
+    '<div class="sheet-head"><h3>個人藝術館申請</h3><button class="sheet-close" id="sheetCloseBtn">✕</button></div>' +
+    '<div class="empty-hint">🎨 申請已送出！<br><br>公會將為你保留一塊專屬空間，審核通過後就能自由佈置、展出你自己的作品。</div>';
+  document.getElementById('overlay').classList.add('show');
+  document.getElementById('sheetCloseBtn').addEventListener('click', closePanel);
 }
 
 function enterGallery(){
   inGallery = true;
   islandGroup.visible = false;
   galleryGroup.visible = true;
+  guildGroup.visible = false;
   player.position.set(0,0,6);
   document.getElementById('interactPrompt').classList.remove('show');
 }
@@ -711,6 +1627,23 @@ function exitGallery(){
   islandGroup.visible = true;
   galleryGroup.visible = false;
   player.position.set(0,0,20);
+  document.getElementById('interactPrompt').classList.remove('show');
+}
+
+function enterGuild(){
+  inGuild = true;
+  islandGroup.visible = false;
+  galleryGroup.visible = false;
+  guildGroup.visible = true;
+  player.position.set(0,0,4);
+  document.getElementById('interactPrompt').classList.remove('show');
+}
+function exitGuild(){
+  inGuild = false;
+  islandGroup.visible = true;
+  guildGroup.visible = false;
+  player.position.copy(guildDoorPos);
+  player.position.z += 5;
   document.getElementById('interactPrompt').classList.remove('show');
 }
 
@@ -726,9 +1659,10 @@ function showArt(idx){
 /* ---------- zone label ---------- */
 var zones = [
   {name:"中央廣場 Agora", x:0,z:0, r:9},
-  {name:"港口區 Dockyard", x:0,z:26, r:10},
-  {name:"主美術館區 Grand Gallery", x:0,z:-22, r:13},
+  {name:"港口區 Dockyard", x:0,z:40, r:14},
+  {name:"主美術館區 Grand Gallery", x:0,z:-38, r:20},
   {name:"個人美術館區 Artist Alley", x:-24,z:0, r:10},
+  {name:"藝術家公會 Artist Guild", x:-42,z:0, r:10},
   {name:"生活休閒區 Leisure Cove", x:24,z:4, r:10}
 ];
 var lastZone = "";
@@ -761,31 +1695,46 @@ function animate(){
   var speed = 7.5;
   var moving = (Math.abs(joyVec.x)>0.05 || Math.abs(joyVec.y)>0.05);
   if(moving){
-    var forward = new THREE.Vector3(joyVec.x, 0, joyVec.y);
-    forward.normalize();
-    player.position.x += forward.x*speed*dt;
-    player.position.z += forward.z*speed*dt;
-    var targetRot = Math.atan2(forward.x, forward.z);
+    // Stable absolute/map-direction control: the direction you drag the
+    // joystick IS the direction the character walks on the map. The
+    // character turns to face that direction, and the camera swings around
+    // to stay behind. (A camera-relative version was tried, but it has an
+    // unavoidable instability at the exact backward direction — the target
+    // angle sits exactly on the wrap-around boundary and never converges,
+    // causing a perpetual spin — so this reverts to the version with no
+    // such feedback loop, which is stable in every direction.)
+    var mvx = joyVec.x;
+    var mvz = joyVec.y;
+
+    player.position.x += mvx*speed*dt;
+    player.position.z += mvz*speed*dt;
+
+    var targetRot = Math.atan2(mvx, mvz);
     var curRot = player.rotation.y;
     var diff = targetRot - curRot;
     while(diff>Math.PI) diff -= Math.PI*2;
     while(diff<-Math.PI) diff += Math.PI*2;
-    player.rotation.y += diff*Math.min(1, dt*10);
+    player.rotation.y += diff*Math.min(1, dt*8);
 
     var bob = Math.sin(Date.now()*0.015)*0.06;
+    var legBaseY = player.userData.legBaseY !== undefined ? player.userData.legBaseY : 0.28;
+    var headBaseY = player.userData.headBaseY !== undefined ? player.userData.headBaseY : 1.7;
     player.userData.legs.forEach(function(leg,i){
-      leg.position.y = 0.28 + Math.abs(Math.sin(Date.now()*0.015 + i*1.5))*0.08;
+      leg.position.y = legBaseY + Math.abs(Math.sin(Date.now()*0.015 + i*1.5))*0.08;
     });
-    player.userData.head.position.y = 1.7 + bob;
+    player.userData.head.position.y = headBaseY + bob;
   }
 
-  if(!inGallery){
-    var half = 44;
+  if(!inGallery && !inGuild){
+    var half = 72;
     player.position.x = Math.max(-half, Math.min(half, player.position.x));
     player.position.z = Math.max(-half, Math.min(half, player.position.z));
-  } else {
-    player.position.x = Math.max(-13.5, Math.min(13.5, player.position.x));
-    player.position.z = Math.max(-8.5, Math.min(9.5, player.position.z));
+  } else if(inGallery){
+    player.position.x = Math.max(-19.5, Math.min(19.5, player.position.x));
+    player.position.z = Math.max(-12, Math.min(12.5, player.position.z));
+  } else if(inGuild){
+    player.position.x = Math.max(-9, Math.min(9, player.position.x));
+    player.position.z = Math.max(-7, Math.min(7.8, player.position.z));
   }
 
   if(jumping){
@@ -794,35 +1743,59 @@ function animate(){
     else { player.position.y = Math.sin(jumpT)*1.6; }
   }
 
-  // camera follow (third person, behind player)
+  // camera follow: standard 3rd-person, always trails behind the character's
+  // current facing direction (rotates together with the player, no separate
+  // reference variable — this is what avoids the instability above)
   var camOffset = new THREE.Vector3(
-    -Math.sin(player.rotation.y)*8,
-    5.5,
-    -Math.cos(player.rotation.y)*8
+    -Math.sin(player.rotation.y)*10,
+    6.5,
+    -Math.cos(player.rotation.y)*10
   );
   var desiredCamPos = player.position.clone().add(camOffset);
   camera.position.lerp(desiredCamPos, 1-Math.pow(0.001,dt));
-  var lookTarget = player.position.clone().add(new THREE.Vector3(0,1.4,0));
+  var lookTarget = player.position.clone().add(new THREE.Vector3(0,1.3,0));
   camera.lookAt(lookTarget);
 
   // proximity checks
-  if(!inGallery){
+  var promptText = document.getElementById('interactPromptText');
+  var promptEl = document.getElementById('interactPrompt');
+
+  if(!inGallery && !inGuild){
     nearNPC = player.position.distanceTo(npcPos) < 3.2;
     nearMuseum = player.position.distanceTo(museumDoorPos) < 3.5;
+    nearNPC2 = player.position.distanceTo(npc2Pos) < 3.2;
+    nearGuildDoor = player.position.distanceTo(guildDoorPos) < 3.5;
     nearExit = false;
-    var prompt = document.getElementById('interactPrompt');
+
     if(nearNPC && !document.getElementById('dialogue').classList.contains('show')){
-      prompt.textContent = "輕點螢幕與艾拉互動";
-      prompt.classList.add('show');
+      promptText.textContent = "輕點螢幕與艾拉互動";
+      promptEl.classList.add('show');
+    } else if(nearNPC2 && !document.getElementById('tictactoe').classList.contains('show')){
+      promptText.textContent = "輕點螢幕與可可玩井字棋";
+      promptEl.classList.add('show');
     } else if(nearMuseum){
-      prompt.textContent = "輕點螢幕進入主美術館";
-      prompt.classList.add('show');
+      promptText.textContent = "輕點螢幕進入主美術館";
+      promptEl.classList.add('show');
+    } else if(nearGuildDoor){
+      promptText.textContent = "輕點螢幕進入藝術家公會";
+      promptEl.classList.add('show');
     } else {
-      prompt.classList.remove('show');
+      promptEl.classList.remove('show');
     }
     npc.lookAt(player.position.x, 1.2, player.position.z);
-  } else {
-    nearExit = player.position.distanceTo(new THREE.Vector3(0,0,9)) < 3;
+    npc2.lookAt(player.position.x, 1.2, player.position.z);
+
+    // entrance arrow bob + gentle spin
+    if(entranceArrow){
+      entranceArrow.position.y = 8.5 + Math.sin(Date.now()*0.003)*0.6;
+      entranceArrow.rotation.y += dt*1.2;
+    }
+    if(guildEntranceArrow){
+      guildEntranceArrow.position.y = 7.5 + Math.sin(Date.now()*0.003 + 1.5)*0.6;
+      guildEntranceArrow.rotation.y += dt*1.2;
+    }
+  } else if(inGallery){
+    nearExit = player.position.distanceTo(new THREE.Vector3(0,0,12)) < 3;
 
     nearArt = -1;
     var bestDist = 2.6;
@@ -833,19 +1806,38 @@ function animate(){
       if(d < bestDist){ bestDist = d; nearArt = ap.index; }
     }
 
-    var prompt2 = document.getElementById('interactPrompt');
     if(nearArt>=0 && !document.getElementById('artCard').classList.contains('show')){
-      prompt2.textContent = "輕點螢幕查看《"+artworks[nearArt].title+"》";
-      prompt2.classList.add('show');
+      promptText.textContent = "輕點螢幕查看《"+artworks[nearArt].title+"》";
+      promptEl.classList.add('show');
     } else if(nearExit){
-      prompt2.textContent = "輕點螢幕離開美術館";
-      prompt2.classList.add('show');
+      promptText.textContent = "輕點螢幕離開美術館";
+      promptEl.classList.add('show');
     } else {
-      prompt2.classList.remove('show');
+      promptEl.classList.remove('show');
     }
+  } else if(inGuild){
+    nearGuildNPC = player.position.distanceTo(guildNPCPos) < 3;
+    nearGuildExit = player.position.distanceTo(new THREE.Vector3(0,0,7)) < 3;
+
+    if(nearGuildNPC && !document.getElementById('dialogue').classList.contains('show')){
+      promptText.textContent = "輕點螢幕與薰特互動";
+      promptEl.classList.add('show');
+    } else if(nearGuildExit){
+      promptText.textContent = "輕點螢幕離開公會";
+      promptEl.classList.add('show');
+    } else {
+      promptEl.classList.remove('show');
+    }
+    if(guildLeader) guildLeader.lookAt(player.position.x, 1.2, player.position.z);
   }
 
   updateZoneLabel();
+
+  if(inGallery){
+    for (var smi=0; smi<sculptureMeshes.length; smi++){
+      sculptureMeshes[smi].rotation.y += dt*0.5;
+    }
+  }
 
   renderer.render(scene, camera);
 }
