@@ -12,7 +12,7 @@
     --c-purple:#6B3FA0;
     --c-gold:#C8952A;
     --c-teal:#0F7B6C;
-    --hud-bg: rgba(0,0,0,0.52);
+    --hud-bg: rgba(0,0,0,0.38);
     --hud-border: rgba(255,255,255,0.18);
     --hud-border-strong: rgba(255,255,255,0.35);
   }
@@ -34,76 +34,76 @@
   .season-banner .dot{width:6px; height:6px; border-radius:50%; background:var(--c-gold);}
 
   /* top-right cluster */
-  .top-left{position:absolute; top:10px; left:6px; width:min(46vw,170px);}
-  .top-right{position:absolute; top:10px; right:6px; display:flex; flex-direction:column; align-items:flex-end; gap:5px; width:min(60vw,240px);}
+  .top-left{position:absolute; top:8px; left:6px; width:min(38vw,140px);}
+  .top-right{position:absolute; top:8px; right:6px; display:flex; flex-direction:column; align-items:flex-end; gap:4px; width:min(48vw,190px);}
   .panel-row{
-    background:var(--hud-bg); backdrop-filter:blur(8px);
-    border:0.5px solid var(--hud-border); border-radius:10px;
-    padding:5px 8px; width:100%; display:flex; align-items:center; justify-content:space-between; gap:6px; color:#fff;
-    box-shadow:0 3px 10px rgba(0,0,0,0.22);
+    background:var(--hud-bg); backdrop-filter:blur(6px);
+    border:0.5px solid var(--hud-border); border-radius:8px;
+    padding:3px 6px; width:100%; display:flex; align-items:center; justify-content:space-between; gap:4px; color:#fff;
+    box-shadow:0 2px 7px rgba(0,0,0,0.18);
   }
-  .currency{display:flex; gap:8px; font-size:11px; font-weight:500;}
-  .currency span{display:flex; align-items:center; gap:3px;}
-  .cur-dot{width:8px; height:8px; border-radius:50%; display:inline-block;}
+  .currency{display:flex; gap:6px; font-size:9px; font-weight:500;}
+  .currency span{display:flex; align-items:center; gap:2px;}
+  .cur-dot{width:6px; height:6px; border-radius:50%; display:inline-block;}
   .cur-inspire{background:var(--c-gold);}
   .cur-gem{background:var(--c-purple);}
   .cur-stamp{background:var(--c-teal);}
 
-  .profile-row{font-size:11px; display:flex; align-items:center; gap:5px; width:100%;}
-  .lvbadge{background:var(--c-blue); border-radius:5px; padding:2px 6px; font-size:10px; font-weight:700;}
-  .xpbar{flex:1; height:5px; background:rgba(255,255,255,0.2); border-radius:3px; overflow:hidden;}
+  .profile-row{font-size:9px; display:flex; align-items:center; gap:4px; width:100%;}
+  .lvbadge{background:var(--c-blue); border-radius:4px; padding:1px 5px; font-size:8px; font-weight:700;}
+  .xpbar{flex:1; height:4px; background:rgba(255,255,255,0.2); border-radius:2px; overflow:hidden;}
   .xpbar i{display:block; height:100%; width:38%; background:var(--c-gold);}
 
-  .main-fn-row{display:flex; gap:5px; width:100%;}
+  .main-fn-row{display:flex; gap:4px; width:100%;}
   .fn-btn{
-    flex:1; background:var(--hud-bg); backdrop-filter:blur(8px);
-    border:0.5px solid var(--hud-border); border-radius:9px;
-    padding:6px 3px; color:#fff; font-size:10px; font-weight:500; text-align:center; position:relative;
-    box-shadow:0 2px 7px rgba(0,0,0,0.2);
+    flex:1; background:var(--hud-bg); backdrop-filter:blur(6px);
+    border:0.5px solid var(--hud-border); border-radius:7px;
+    padding:4px 2px; color:#fff; font-size:8px; font-weight:500; text-align:center; position:relative;
+    box-shadow:0 2px 5px rgba(0,0,0,0.16);
   }
-  .fn-btn.gold{border-color:rgba(200,149,42,0.6); background:linear-gradient(160deg, rgba(200,149,42,0.35), rgba(0,0,0,0.5));}
-  .fn-btn .dot-alert{position:absolute; top:-2px; right:-2px; width:7px; height:7px; border-radius:50%; background:#e05252;}
-  .fn-btn i{display:block; font-size:14px; margin-bottom:1px;}
+  .fn-btn.gold{border-color:rgba(200,149,42,0.6); background:linear-gradient(160deg, rgba(200,149,42,0.3), rgba(0,0,0,0.4));}
+  .fn-btn .dot-alert{position:absolute; top:-2px; right:-2px; width:6px; height:6px; border-radius:50%; background:#e05252;}
+  .fn-btn i{display:block; font-size:11px; margin-bottom:1px;}
 
-  .minor-fn-row{display:flex; flex-wrap:wrap; gap:5px; justify-content:flex-end; width:100%;}
+  .minor-fn-row{display:flex; flex-wrap:wrap; gap:4px; justify-content:flex-end; width:100%;}
   .minor-btn{
-    width:32px; height:32px; border-radius:50%;
-    background:var(--hud-bg); backdrop-filter:blur(8px);
+    width:24px; height:24px; border-radius:50%;
+    background:var(--hud-bg); backdrop-filter:blur(6px);
     border:0.5px solid var(--hud-border); color:#fff;
-    display:flex; align-items:center; justify-content:center; font-size:14px;
+    display:flex; align-items:center; justify-content:center; font-size:11px;
   }
 
   /* left toolbar */
-  .left-toolbar{position:absolute; left:6px; top:50%; transform:translateY(-50%); display:flex; flex-direction:column; gap:7px;}
+  .left-toolbar{position:absolute; left:5px; top:50%; transform:translateY(-50%); display:flex; flex-direction:column; gap:5px;}
   .left-toolbar button{
-    width:32px; height:32px; border-radius:50%;
-    background:var(--hud-bg); backdrop-filter:blur(8px);
-    border:0.5px solid var(--hud-border); color:#fff; font-size:14px;
+    width:24px; height:24px; border-radius:50%;
+    background:var(--hud-bg); backdrop-filter:blur(6px);
+    border:0.5px solid var(--hud-border); color:#fff; font-size:11px;
   }
 
   /* chat */
-  .chat-box{position:absolute; left:6px; bottom:108px; width:min(48vw,210px);}
-  .chat-tabs{display:flex; gap:4px; margin-bottom:4px;}
-  .chat-tabs span{font-size:10px; color:#fff; background:rgba(0,0,0,0.35); border-radius:6px; padding:2px 7px;}
+  .chat-box{position:absolute; left:5px; bottom:82px; width:min(38vw,165px);}
+  .chat-tabs{display:flex; gap:3px; margin-bottom:3px;}
+  .chat-tabs span{font-size:8px; color:#fff; background:rgba(0,0,0,0.3); border-radius:5px; padding:1px 5px;}
   .chat-tabs span.active{background:var(--c-blue);}
   .chat-log{
-    background:var(--hud-bg); backdrop-filter:blur(8px); border:0.5px solid var(--hud-border);
-    border-radius:10px; padding:6px 9px; color:#fff; font-size:11px; line-height:1.55; max-height:52px; overflow:hidden;
+    background:var(--hud-bg); backdrop-filter:blur(6px); border:0.5px solid var(--hud-border);
+    border-radius:8px; padding:4px 7px; color:#fff; font-size:9px; line-height:1.5; max-height:38px; overflow:hidden;
   }
 
   /* joystick */
   .joy-wrap{
-    position:absolute; left:16px; bottom:16px; width:78px; height:78px;
+    position:absolute; left:12px; bottom:12px; width:62px; height:62px;
   }
   .joy-base{
     position:absolute; inset:0; border-radius:50%;
-    background:rgba(255,255,255,0.10); backdrop-filter:blur(6px);
-    border:1.5px solid rgba(255,255,255,0.35);
+    background:rgba(255,255,255,0.08); backdrop-filter:blur(4px);
+    border:1.5px solid rgba(255,255,255,0.3);
   }
   .joy-stick{
-    position:absolute; width:32px; height:32px; border-radius:50%;
-    left:50%; top:50%; margin-left:-16px; margin-top:-16px;
-    background:rgba(255,255,255,0.6); border:1px solid rgba(255,255,255,0.8);
+    position:absolute; width:26px; height:26px; border-radius:50%;
+    left:50%; top:50%; margin-left:-13px; margin-top:-13px;
+    background:rgba(255,255,255,0.55); border:1px solid rgba(255,255,255,0.75);
     transition:transform .05s linear;
   }
   .joy-wrap.active .joy-base{border-color:rgba(200,149,42,0.75);}
@@ -111,29 +111,29 @@
 
   /* interact prompt */
   .interact-prompt{
-    position:absolute; bottom:118px; left:50%; transform:translateX(-50%);
-    background:linear-gradient(160deg, rgba(30,20,5,0.75), rgba(0,0,0,0.6));
-    backdrop-filter:blur(10px); border:1.5px solid rgba(200,149,42,0.85);
-    border-radius:999px; padding:9px 20px; display:none;
-    box-shadow:0 4px 16px rgba(0,0,0,0.35), 0 0 12px rgba(200,149,42,0.3);
+    position:absolute; bottom:92px; left:50%; transform:translateX(-50%);
+    background:linear-gradient(160deg, rgba(30,20,5,0.7), rgba(0,0,0,0.55));
+    backdrop-filter:blur(8px); border:1.5px solid rgba(200,149,42,0.85);
+    border-radius:999px; padding:6px 14px; display:none;
+    box-shadow:0 3px 12px rgba(0,0,0,0.3), 0 0 10px rgba(200,149,42,0.28);
     animation:promptBounce 1.4s ease-in-out infinite;
-    max-width:80vw;
+    max-width:70vw;
   }
   .interact-prompt.show{display:block;}
   .interact-prompt span{
-    font-family:"Noto Sans TC",sans-serif; font-weight:900; font-size:14px; letter-spacing:0.5px;
+    font-family:"Noto Sans TC",sans-serif; font-weight:900; font-size:11px; letter-spacing:0.3px;
     background:linear-gradient(180deg, #FFE9B8 0%, #C8952A 60%, #E8B84B 100%);
     -webkit-background-clip:text; background-clip:text; color:transparent;
-    text-shadow:0 2px 5px rgba(0,0,0,0.35);
+    text-shadow:0 1px 4px rgba(0,0,0,0.35);
     white-space:nowrap;
   }
-  @keyframes promptBounce{ 0%,100%{transform:translateX(-50%) translateY(0);} 50%{transform:translateX(-50%) translateY(-5px);} }
+  @keyframes promptBounce{ 0%,100%{transform:translateX(-50%) translateY(0);} 50%{transform:translateX(-50%) translateY(-4px);} }
 
   /* bottom right shortcuts */
-  .shortcuts{position:absolute; right:8px; bottom:16px; display:flex; flex-direction:column; align-items:flex-end; gap:5px;}
+  .shortcuts{position:absolute; right:6px; bottom:12px; display:flex; flex-direction:column; align-items:flex-end; gap:4px;}
   .shortcuts .sbtn{
-    width:38px; height:38px; border-radius:50%; background:var(--hud-bg); backdrop-filter:blur(8px);
-    border:0.5px solid var(--hud-border); color:#fff; font-size:15px; display:flex; align-items:center; justify-content:center;
+    width:28px; height:28px; border-radius:50%; background:var(--hud-bg); backdrop-filter:blur(6px);
+    border:0.5px solid var(--hud-border); color:#fff; font-size:11px; display:flex; align-items:center; justify-content:center;
   }
 
   /* zone label */
@@ -1341,7 +1341,7 @@ function makeNameSprite(text){
   var tex = new THREE.CanvasTexture(c);
   var mat = new THREE.SpriteMaterial({map:tex, depthTest:false});
   var sprite = new THREE.Sprite(mat);
-  sprite.scale.set(2.4, 0.9, 1);
+  sprite.scale.set(1.7, 0.64, 1);
   return sprite;
 }
 
@@ -1370,7 +1370,7 @@ function buildPlayer(){
 var joyVec = new THREE.Vector2();
 var joyActive = false;
 var joyCenter = {x:0, y:0};
-var joyMaxRadius = 26;
+var joyMaxRadius = 20;
 
 function setupJoystick(){
   var wrap = document.getElementById('joyWrap');
